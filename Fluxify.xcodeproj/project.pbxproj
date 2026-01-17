@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		2097F2492F1A39F400A3023F /* Fluxify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fluxify.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2097F2492F1A39F400A3023F /* Fluxify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Fluxify.app; path = "/Users/ta638/Apps/Fluxify/build/Debug-iphoneos/Fluxify.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2097F24B2F1A39F400A3023F /* Fluxify */ = {
+		201477A22F1B9FB5009232B7 /* Fluxify */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Fluxify;
 			sourceTree = "<group>";
@@ -32,17 +32,8 @@
 		2097F2402F1A39F400A3023F = {
 			isa = PBXGroup;
 			children = (
-				2097F24B2F1A39F400A3023F /* Fluxify */,
-				2097F24A2F1A39F400A3023F /* Products */,
+				201477A22F1B9FB5009232B7 /* Fluxify */,
 			);
-			sourceTree = "<group>";
-		};
-		2097F24A2F1A39F400A3023F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2097F2492F1A39F400A3023F /* Fluxify.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -61,7 +52,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				2097F24B2F1A39F400A3023F /* Fluxify */,
+				201477A22F1B9FB5009232B7 /* Fluxify */,
 			);
 			name = Fluxify;
 			packageProductDependencies = (
@@ -95,7 +86,7 @@
 			mainGroup = 2097F2402F1A39F400A3023F;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 2097F24A2F1A39F400A3023F /* Products */;
+			productRefGroup = 2097F2402F1A39F400A3023F;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
