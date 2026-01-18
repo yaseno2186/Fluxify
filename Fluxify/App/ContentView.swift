@@ -9,9 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        MainTabView()
+        VStack{
+            Text("Hello Bahinaz")
+            
+        }
     }
-}
+    
+    
+
+    }
+
 
 #Preview {
     ContentView()
