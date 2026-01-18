@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		2097F2492F1A39F400A3023F /* Fluxify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Fluxify.app; path = "/Users/ta638/Apps/Fluxify/build/Debug-iphoneos/Fluxify.app"; sourceTree = "<absolute>"; };
+		C36C96E12F1BEC7D00FACF0E /* Fluxify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fluxify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,6 +33,7 @@
 			isa = PBXGroup;
 			children = (
 				201477A22F1B9FB5009232B7 /* Fluxify */,
+				C36C96E12F1BEC7D00FACF0E /* Fluxify.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,7 +59,7 @@
 			packageProductDependencies = (
 			);
 			productName = Fluxify;
-			productReference = 2097F2492F1A39F400A3023F /* Fluxify.app */;
+			productReference = C36C96E12F1BEC7D00FACF0E /* Fluxify.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

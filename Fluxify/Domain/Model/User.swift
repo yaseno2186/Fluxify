@@ -7,13 +7,12 @@
 
 import Foundation
 
-struct User {
+struct User: Codable{
     let uid: UUID
-    //    var Lessons:
-    var isCompleted: Bool
     var Email: String
-    var streak: Int?
+    var streakDays: Int?
     var FirstName: String?
     var LastName: String?
+    var username: String
     var phone: String?
 }
