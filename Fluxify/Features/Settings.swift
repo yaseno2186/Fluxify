@@ -1,10 +1,3 @@
-//
-//  Settings.swift
-//  Fluxify
-//
-//  Created by TA638 on 17.01.26.
-//
-
 import SwiftUI
 
 struct SettingsView: View {
@@ -12,12 +5,12 @@ struct SettingsView: View {
 
         NavigationStack {
             ZStack {
-                Color(.systemGroupedBackground)
+                CosmicBackgroundView()
                     .ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 20) {
-
+                        
                         // Profil Header
                         VStack(spacing: 5) {
                             Image(systemName: "person.fill")
@@ -26,11 +19,11 @@ struct SettingsView: View {
                                 .padding()
                                 .background(Color(.systemGray5))
                                 .clipShape(Circle())
-
+                            
                             Text("Bobby Water")
                                 .font(.title2)
                                 .bold()
-
+                            
                             Text("bobby.water@")
                                 .foregroundColor(.gray)
                         }
@@ -40,56 +33,59 @@ struct SettingsView: View {
                         .cornerRadius(30)
                         .shadow(color: .black.opacity(0.1), radius: 8)
                         .padding(.horizontal)
-
+                        
                         //Allgemein
                         VStack(alignment: .leading, spacing: 8) {
                             Text("ALLGEMEIN")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                                 .padding(.leading)
-
+                            
                             VStack(spacing: 0) {
+                               
                                 settingsRow(
                                     icon: "person.fill",
-                                    iconColor: .gray,
+                                    iconColor: .white,
                                     title: "Profil",
                                     destination: ProfileView()
                                 )
-
+                                
                                 divider()
-
+                                
+                                
                                 settingsRow(
                                     icon: "bell.fill",
                                     iconColor: .blue,
                                     title: "Benachrichtigung",
                                     destination: NotificationView()
                                 )
-
+                                
                                 divider()
-
+                                
                                 settingsRow(
                                     icon: "bookmark.fill",
                                     iconColor: .orange,
                                     title: "Gespeichert",
                                     destination: SavedView()
                                 )
-
+                                
                                 divider()
-
+                                
                                 settingsRow(
                                     icon: "key.fill",
                                     iconColor: .black,
                                     title: "Passwort",
                                     destination: PasswordView()
                                 )
+                                
+                              
                             }
-                            .background(Color.white)
-                            .cornerRadius(16)
-                            .shadow(color: .black.opacity(0.05), radius: 5)
-                            .padding(.horizontal)
+                            
+                                .padding(.horizontal)
                         }
+                    
 
-                        // Über uns
+                        //Über uns
                         VStack(alignment: .leading, spacing: 8) {
                             Text("ÜBER UNS")
                                 .font(.caption)
@@ -99,24 +95,17 @@ struct SettingsView: View {
                             VStack(spacing: 0) {
                                 settingsRow(
                                     icon: "info.circle",
-                                    iconColor: .black,
-                                    title: "About Us",
+                                    iconColor: .white,
+                                    title: "Über uns",
                                     destination: AboutView()
                                 )
 
                                 divider()
-
-                                HStack {
-                                    Text("App Version")
-                                    Spacer()
-                                    Text("2.2")
-                                        .foregroundColor(.gray)
-                                }
+                                    
                                 .padding()
                             }
-                            .background(Color.white)
                             .cornerRadius(16)
-                            .shadow(color: .black.opacity(0.05), radius: 5)
+                            .shadow(color: .black.opacity(0.5), radius: 5)
                             .padding(.horizontal)
                         }
 
@@ -125,11 +114,18 @@ struct SettingsView: View {
                     .padding(.top)
                 }
             }
-            .navigationTitle("Einstellungen")
+            .navigationTitle("")
+            .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text("Einstellungen")
+                                .font(.system(size: 30, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                    }
         }
     }
 
-    // Views
+    //Helper Views
 
     func settingsRow<Destination: View>(
         icon: String,
@@ -147,7 +143,8 @@ struct SettingsView: View {
                     .frame(width: 30)
 
                 Text(title)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
+                    .font(.system(size: 25))
 
                 Spacer()
 
@@ -159,11 +156,19 @@ struct SettingsView: View {
     }
 
     func divider() -> some View {
-        Divider()
-            .padding(.leading, 50)
+        Rectangle()
+            .fill(Color.white)
+            .frame(height: 1)
+            .padding(.leading, 0)
     }
 }
 
+
+
 #Preview {
     SettingsView()
+    
 }
+//
+// .navigationtitle
+// toolbar

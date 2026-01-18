@@ -9,9 +9,19 @@ import SwiftUI
 
 struct ProfileView: View {
     var body: some View {
-        Text("Profil")
         
-        
+        ZStack{
+            
+            
+            CosmicBackgroundView()
+                .ignoresSafeArea()
+            
+            Text("Profil")
+                .foregroundStyle(Color.white)
+                .font(.largeTitle)
+                
+            
+        }
         
     }
     
