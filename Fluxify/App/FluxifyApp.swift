@@ -17,7 +17,6 @@ struct FluxifyApp: App {
             Group {
                     AnyView(MainTabView())          // ← wrapped
             }
-            .preferredColorScheme(.dark)
         }
     }
 }

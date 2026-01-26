@@ -36,10 +36,10 @@ struct MainTabView: View {
 
                 HStack(spacing: 0) {
                     TabBarButton(
-                        icon: "gear.fill",
-                        label: "Einstellungen",
-                        isSelected: selectedTab == .einstellungen,
-                        action: { selectedTab = .einstellungen }
+                        icon: "house.fill",
+                        label: "Home",
+                        isSelected: selectedTab == .home,
+                        action: { selectedTab = .home }
                     )
 
                     Spacer()
@@ -54,10 +54,10 @@ struct MainTabView: View {
                     Spacer()
 
                     TabBarButton(
-                        icon: "house.fill",
-                        label: "Home",
-                        isSelected: selectedTab == .home,
-                        action: { selectedTab = .home }
+                        icon: "gear",
+                        label: "Einstellungen",
+                        isSelected: selectedTab == .einstellungen,
+                        action: { selectedTab = .einstellungen }
                     )
                 }
                 .padding(.horizontal, 20)
