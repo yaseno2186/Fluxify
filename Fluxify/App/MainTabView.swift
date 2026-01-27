@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
+    @State private var isViewingLesson = false
 
     enum Tab {
         case einstellungen
@@ -30,39 +31,41 @@ struct MainTabView: View {
                 }
             }
 
-            // Bottom Navigation Bar
-            VStack(spacing: 0) {
-                Divider()
+            // Bottom Navigation Bar - Hidden when viewing lesson
+            if !isViewingLesson {
+                VStack(spacing: 0) {
+                    Divider()
 
-                HStack(spacing: 0) {
-                    TabBarButton(
-                        icon: "house.fill",
-                        label: "Home",
-                        isSelected: selectedTab == .home,
-                        action: { selectedTab = .home }
-                    )
+                    HStack(spacing: 0) {
+                        TabBarButton(
+                            icon: "house.fill",
+                            label: "Home",
+                            isSelected: selectedTab == .home,
+                            action: { selectedTab = .home }
+                        )
 
-                    Spacer()
+                        Spacer()
 
-                    TabBarButton(
-                        icon: "heart.fill",
-                        label: "Favorite",
-                        isSelected: selectedTab == .favorite,
-                        action: { selectedTab = .favorite }
-                    )
+                        TabBarButton(
+                            icon: "heart.fill",
+                            label: "Favorite",
+                            isSelected: selectedTab == .favorite,
+                            action: { selectedTab = .favorite }
+                        )
 
-                    Spacer()
+                        Spacer()
 
-                    TabBarButton(
-                        icon: "gear",
-                        label: "Einstellungen",
-                        isSelected: selectedTab == .einstellungen,
-                        action: { selectedTab = .einstellungen }
-                    )
+                        TabBarButton(
+                            icon: "gear",
+                            label: "Einstellungen",
+                            isSelected: selectedTab == .einstellungen,
+                            action: { selectedTab = .einstellungen }
+                        )
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(Color(.systemBackground))
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Color(.systemBackground))
             }
         }
         .ignoresSafeArea(edges: .bottom)
