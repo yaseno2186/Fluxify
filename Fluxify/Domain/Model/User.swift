@@ -1,21 +1,19 @@
-//
-//  User.swift
-//  Fluxify
-//
-//  Created by TA638 on 17.01.26.
-//
-
 import Foundation
 
-struct User: Codable {
-    let uid: UUID
-    var username: String
-    var streakDays: Int?
-    var league: String
+struct User: Identifiable {
+    let id = UUID()
+    var name: String
     var email: String
-    var FirstName: String?
-    var LastName: String?
-    var phone: String?
-    var completedLessons: [UUID]
+    var password: String
+    var username: String
+    var streak: Int = 0
+    var league: String = "Bronze"
+    var savedTasks: [Task] = []
 }
- 
+
+//password decoding example
+extension User {
+    func isPasswordValid(inputPassword: String) -> Bool {
+        return inputPassword == password
+    }
+}
