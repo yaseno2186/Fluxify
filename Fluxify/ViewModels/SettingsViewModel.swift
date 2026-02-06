@@ -1,4 +1,3 @@
-
 import Foundation
 import Combine
 
@@ -8,7 +7,7 @@ class SettingsViewModel: ObservableObject {
     @Published var selectedLanguage: Language = .english {
         didSet {
             Bundle.setLanguage(selectedLanguage.code)
-            UserDefaults.standard.set([selectedLanguage.code], forKey: "AppLanguage")
+            UserDefaults.standard.set(selectedLanguage.code, forKey: "AppLanguage")
         }
     }
     let languages = Language.allCases
