@@ -14,7 +14,7 @@ import SwiftUI
 
 
 
-struct Haus: View {
+struct HomeView: View {
     @State private var searchText = ""
     
     let geraete = [
@@ -561,8 +561,8 @@ struct Geraet: Identifiable {
     let icon: String
 }
 
-struct Haus_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        Haus()
+        HomeView()
     }
 }
