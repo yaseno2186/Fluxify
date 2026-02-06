@@ -11,10 +11,13 @@ struct ContentView: View {
     var body: some View {
         
         ZStack {
-            CosmicBackgroundView()
+            
+          
+            ParticleBackground()
                 .ignoresSafeArea()
             
             SettingsView()
+            
             
             
         }

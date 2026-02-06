@@ -1,174 +1,118 @@
+//
+//  Settings.swift
+//  MyApp
+//
+//  Created by Chingiz on 18.01.26.
+//
+
+
+// list
 import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-
-        NavigationStack {
-            ZStack {
-                CosmicBackgroundView()
+        NavigationStack{
+            ZStack{
+                
+                ParticleBackground()
                     .ignoresSafeArea()
-
-                ScrollView {
-                    VStack(spacing: 20) {
+                
+                VStack {
+                    ZStack{
+                      
                         
-                        // Profil Header
-                        VStack(spacing: 5) {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 50))
-                                .foregroundColor(.gray)
-                                .padding()
-                                .background(Color(.systemGray5))
-                                .clipShape(Circle())
-                            
-                            Text("Bobby Water")
-                                .font(.title2)
-                                .bold()
-                            
-                            Text("bobby.water@")
-                                .foregroundColor(.gray)
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white)
-                        .cornerRadius(30)
-                        .shadow(color: .black.opacity(0.1), radius: 8)
-                        .padding(.horizontal)
-                        
-                        //Allgemein
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("ALLGEMEIN")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.leading)
-                            
-                            VStack(spacing: 0) {
-                               
-                                settingsRow(
-                                    icon: "person.fill",
-                                    iconColor: .white,
-                                    title: "Profil",
-                                    destination: ProfileView()
-                                )
-                                
-                                divider()
-                                
-                                
-                                settingsRow(
-                                    icon: "bell.fill",
-                                    iconColor: .blue,
-                                    title: "Benachrichtigung",
-                                    destination: NotificationView()
-                                )
-                                
-                                divider()
-                                
-                                settingsRow(
-                                    icon: "bookmark.fill",
-                                    iconColor: .orange,
-                                    title: "Gespeichert",
-                                    destination: SavedView()
-                                )
-                                
-                                divider()
-                                
-                                settingsRow(
-                                    icon: "key.fill",
-                                    iconColor: .black,
-                                    title: "Passwort",
-                                    destination: PasswordView()
-                                )
-                                
-                              
-                            }
-                            
-                                .padding(.horizontal)
-                        }
+                    }
+                    Spacer()
                     
-
-                        //Über uns
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("ÜBER UNS")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.leading)
-
-                            VStack(spacing: 0) {
-                                settingsRow(
-                                    icon: "info.circle",
-                                    iconColor: .white,
-                                    title: "Über uns",
-                                    destination: AboutView()
-                                )
-
-                                divider()
-                                    
-                                .padding()
-                            }
-                            .cornerRadius(16)
-                            .shadow(color: .black.opacity(0.5), radius: 5)
-                            .padding(.horizontal)
-                        }
-
-                        Spacer(minLength: 40)
-                    }
-                    .padding(.top)
+                    PrimaryButton(
+                        title: "heart",
+                        icon: "person.fill",
+                        destination: AnyView(DetailView())
+                    )
+                    
+                    PrimaryButton(
+                        title: "Benachrichtigung",
+                        icon: "bell.fill",
+                        destination: AnyView(DetailView())
+                    )
+                    
+                    PrimaryButton(
+                        title: "Gespeichert",
+                        icon: "heart.fill",
+                        destination: AnyView(DetailView())
+                    )
+                    
+                    PrimaryButton(
+                        title: "Hey",
+                        icon: "hand.wave.fill",
+                        destination: AnyView(DetailView())
+                    )
+                    
+                    
+                    Spacer()
                 }
-            }
-            .navigationTitle("")
-            .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            Text("Einstellungen")
-                                .font(.system(size: 30, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                    }
+                
+            }.navigationTitle("Einstellungen")
+            
+            
         }
+  
+            
     }
+    
+}
 
-    //Helper Views
+struct PrimaryButton: View {
+    let title: String
+    let icon: String
+    let destination: AnyView
 
-    func settingsRow<Destination: View>(
-        icon: String,
-        iconColor: Color,
-        title: String,
-        destination: Destination
-    ) -> some View {
-
+    var body: some View {
         NavigationLink {
             destination
         } label: {
-            HStack {
+            HStack(spacing: 20) {
+
                 Image(systemName: icon)
-                    .foregroundColor(iconColor)
-                    .frame(width: 30)
+                    .font(.system(size: 22))
+                    .foregroundColor(.white)
 
                 Text(title)
-                    .foregroundColor(.white)
-                    .font(.system(size: 25))
-
+                    .font(.system(size: 24))
+                    .foregroundStyle(Color.white)
+                
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.blue)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.7))
             }
-            .padding()
+            .frame(width: 300, height: 60, alignment: .leading)
+            .padding(.trailing, 20)
+            .padding(.leading, 20)
+            .background(Color.gray.opacity(0.8))
+            .cornerRadius(8)
         }
     }
-
-    func divider() -> some View {
-        Rectangle()
-            .fill(Color.white)
-            .frame(height: 1)
-            .padding(.leading, 0)
-    }
 }
+
+
+
+
+//Button("Tap me") {
+//    print("Button gedrückt")
+//}
+//.font(.system(size: 20))
+//.padding(.horizontal, 32)
+//.padding(.vertical, 14)
+//.background(Color.blue)
+//.foregroundColor(.white)
+//.cornerRadius(8)
+//
 
 
 
 #Preview {
     SettingsView()
-    
 }
-//
-// .navigationtitle
-// toolbar
+
