@@ -6,7 +6,6 @@
 
 import SwiftUI
 import Combine
-
 @main
 struct FluxifyApp: App {
     // 1. simple offline user state
@@ -36,3 +35,4 @@ struct MainTabView: View {
     }
         
     }
+

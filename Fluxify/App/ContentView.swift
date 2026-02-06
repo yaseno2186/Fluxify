@@ -9,7 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        MainTabView()
+        
+        ZStack {
+            
+          
+            ParticleBackground()
+                .ignoresSafeArea()
+            
+            SettingsView()
+            
+            
+            
+        }
+        
+        
+        
+        
+       
     }
 }
 
