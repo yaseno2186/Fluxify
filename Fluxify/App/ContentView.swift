@@ -13,7 +13,7 @@ struct ContentView: View {
         ZStack {
             
           
-            ParticleBackground()
+            ParticleBackground1()
                 .ignoresSafeArea()
             
             SettingsView()

@@ -12,7 +12,7 @@ struct SettingsView: View {
         NavigationStack{
             ZStack{
                 
-                ParticleBackground()
+                ParticleBackground1()
                     .ignoresSafeArea()
                 //CosmicBackgroundView()
                 

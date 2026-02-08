@@ -22,7 +22,7 @@ struct Particle: Identifiable {
 }
 
 
-struct ParticleBackground: View {
+struct ParticleBackground1: View {
     @State private var particles: [Particle] = []
     let timer = Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()
     
@@ -82,5 +82,5 @@ struct ParticleBackground: View {
 }
 
 #Preview {
-    ParticleBackground()
+    ParticleBackground1()
 }

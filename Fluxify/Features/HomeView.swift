@@ -14,6 +14,8 @@ import SwiftUI
 
 
 
+import SwiftUI
+
 struct HomeView: View {
     @State private var searchText = ""
     
@@ -34,108 +36,73 @@ struct HomeView: View {
         Geraet(name: "Zentrifuge", kategorie: "Experten Geräte", icon: "rotate.3d")
     ]
     
-    var gefilterteGeraete: [Geraet] {
-        if searchText.isEmpty { return [] }
-        return geraete.filter { $0.name.lowercased().hasPrefix(searchText.lowercased()) }
-    }
-    
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 15) {
-                    
-                    // Header
-                    Text("Home")
-                        .font(.system(size: 38, weight: .bold, design: .rounded))
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 24)
-                        .padding(.top, 50)
-                    
-                    // Suchleiste
-                    SuchLeiste(searchText: $searchText, geraete: geraete)
-                    
-                    if searchText.isEmpty {
-                        // Vier Themen-Kacheln
-                        VStack(spacing: 16) {
-                            NavigationLink(destination:
-                                ThemaDetailView(
-                                    titel: "Mechanik",
-                                    farbe: .mint,
-                                    geraete: geraete.filter { $0.kategorie == "Mechanik" }
-                                )
-                            ) {
-                                FeatureCard(title: "Mechanik", icon: "gearshape.2.fill", color: .mint)
-                            }
-                            
-                            NavigationLink(destination:
-                                ThemaDetailView(
-                                    titel: "Elektromagnetismus",
-                                    farbe: .red,
-                                    geraete: geraete.filter { $0.kategorie == "Elektromagnetismus" }
-                                )
-                            ) {
-                                FeatureCard(title: "Elektromagnetismus", icon: "minus.plus.batteryblock.fill", color: .red)
-                            }
-                            
-                            NavigationLink(destination:
-                                ThemaDetailView(
-                                    titel: "Wärmelehre",
-                                    farbe: .orange,
-                                    geraete: geraete.filter { $0.kategorie == "Wärmelehre" }
-                                )
-                            ) {
-                                FeatureCard(title: "Wärmelehre", icon: "flame.fill", color: .orange)
-                            }
-                            
-                            NavigationLink(destination:
-                                ThemaDetailView(
-                                    titel: "Optik",
-                                    farbe: .purple,
-                                    geraete: geraete.filter { $0.kategorie == "Optik" }
-                                )
-                            ) {
-                                FeatureCard(title: "Optik", icon: "triangle.fill", color: .cyan)
-                            }
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 20)
+            ZStack {
+                // 1. Hintergrund ganz unten
+                ParticleBackground1()
+                    .ignoresSafeArea()
+                
+                // 2. Die ScrollView muss transparent sein
+                ScrollView {
+                    VStack(spacing: 15) {
                         
-                        // Untere Kacheln
-                        VStack(spacing: 16) {
-                            // Experten Geräte
-                            NavigationLink(destination:
-                                ExpertenListeView(geraete: geraete.filter { $0.kategorie == "Experten Geräte" })
-                            ) {
-                                SpecialFeatureCard(
-                                    title: "Experten Geräte",
-                                    icon: "graduationcap.fill",
-                                    color: .blue,
-                                    borderColor: .blue.opacity(0.8)
-                                )
+                        // Header
+                        Text("Home")
+                            .font(.system(size: 38, weight: .bold, design: .rounded))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 24)
+                            .padding(.top, 50)
+                        
+                        // Suchleiste
+                        SuchLeiste(searchText: $searchText, geraete: geraete)
+                        
+                        if searchText.isEmpty {
+                            // Themen-Kacheln
+                            VStack(spacing: 16) {
+                                NavigationLink(destination: ThemaDetailView(titel: "Mechanik", farbe: .mint, geraete: geraete.filter { $0.kategorie == "Mechanik" })) {
+                                    FeatureCard(title: "Mechanik", icon: "gearshape.2.fill", color: .mint)
+                                }
+                                
+                                NavigationLink(destination: ThemaDetailView(titel: "Elektromagnetismus", farbe: .red, geraete: geraete.filter { $0.kategorie == "Elektromagnetismus" })) {
+                                    FeatureCard(title: "Elektromagnetismus", icon: "minus.plus.batteryblock.fill", color: .red)
+                                }
+                                
+                                NavigationLink(destination: ThemaDetailView(titel: "Wärmelehre", farbe: .orange, geraete: geraete.filter { $0.kategorie == "Wärmelehre" })) {
+                                    FeatureCard(title: "Wärmelehre", icon: "flame.fill", color: .orange)
+                                }
+                                
+                                NavigationLink(destination: ThemaDetailView(titel: "Optik", farbe: .purple, geraete: geraete.filter { $0.kategorie == "Optik" })) {
+                                    FeatureCard(title: "Optik", icon: "triangle.fill", color: .cyan)
+                                }
                             }
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 20)
                             
-                            // Wusstest du schon
-                            NavigationLink(destination: WusstestDuSchonView()) {
-                                SpecialFeatureCard(
-                                    title: "Wusstest du schon?",
-                                    icon: "lightbulb.fill",
-                                    color: .yellow,
-                                    borderColor: .yellow.opacity(0.8)
-                                )
+                            // Untere Kacheln
+                            VStack(spacing: 16) {
+                                NavigationLink(destination: ExpertenListeView(geraete: geraete.filter { $0.kategorie == "Experten Geräte" })) {
+                                    SpecialFeatureCard(title: "Experten Geräte", icon: "graduationcap.fill", color: .blue, borderColor: .blue.opacity(0.8))
+                                }
+                                
+                                NavigationLink(destination: WusstestDuSchonView()) {
+                                    SpecialFeatureCard(title: "Wusstest du schon?", icon: "lightbulb.fill", color: .yellow, borderColor: .yellow.opacity(0.8))
+                                }
                             }
+                            .padding(.horizontal, 24)
+                            .padding(.bottom, 120)
                         }
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 120)
                     }
                 }
+               
+                .background(Color.clear) // ScrollView transparent
             }
             .navigationBarHidden(true)
-            .background(Color(.systemBackground))
+            // .background(Color(.systemBackground)) weg
         }
     }
 }
-
 // Standard Feature Card (für Themen)
 struct FeatureCard: View {
     let title: String
