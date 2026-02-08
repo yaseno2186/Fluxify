@@ -1,6 +1,6 @@
 
 import Foundation
-import Combine
+internal import Combine
 
 class LoginViewModel: ObservableObject {
     @Published var email = ""

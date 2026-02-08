@@ -1,5 +1,5 @@
 import Foundation
-import Combine
+internal import Combine
 
 class TasksViewModel: ObservableObject {
     @Published var tasks = [Task]()

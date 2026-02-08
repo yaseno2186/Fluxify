@@ -1,5 +1,5 @@
 import Foundation
-import Combine
+internal import Combine
 
 class SettingsViewModel: ObservableObject {
     @Published var user: User?

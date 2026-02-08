@@ -1,6 +1,6 @@
 
 import Foundation
-import Combine
+internal import Combine
 
 class HomeViewModel: ObservableObject {
     @Published var lessons = [Lesson]()
