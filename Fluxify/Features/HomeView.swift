@@ -5,14 +5,6 @@
 //  Created by Bahinaz on 29.01.26.
 //
 
-import SwiftUI
-
-
-
-
-import SwiftUI
-
-
 
 import SwiftUI
 
@@ -103,6 +95,7 @@ struct HomeView: View {
         }
     }
 }
+
 // Standard Feature Card (für Themen)
 struct FeatureCard: View {
     let title: String
