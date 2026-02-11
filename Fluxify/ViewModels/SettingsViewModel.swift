@@ -9,6 +9,7 @@ class SettingsViewModel: ObservableObject {
         didSet {
             Bundle.setLanguage(selectedLanguage.code)
             UserDefaults.standard.set([selectedLanguage.code], forKey: "AppLanguage")
+            UserDefaults.standard.set(selectedLanguage.code, forKey: "AppLanguage")
         }
     }
     let languages = Language.allCases
