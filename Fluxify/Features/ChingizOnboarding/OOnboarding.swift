@@ -16,7 +16,7 @@ struct Onboarding: View {
     @AppStorage("userEmail") var userEmail: String = ""
     
     // Initialisiere den Manager hier
-    @StateObject private var savedPostsManager = SavedPostsManager()
+   
     
     private enum AppTab: Hashable { case home, settings }
     @State private var selectedTab: AppTab = .home
@@ -49,7 +49,7 @@ struct Onboarding: View {
             }
         }
         // Das EnvironmentObject wird hier an den gesamten TabView-Baum weitergegeben
-        .environmentObject(savedPostsManager)
+       
         
         // Onboarding-Overlay
         .fullScreenCover(isPresented: $shouldShowOnboarding) {

@@ -12,6 +12,8 @@ struct SettingsView1: View {
     var userName: String
     var userEmail: String
     @Binding var shouldShowOnboarding: Bool
+    
+    
     @State private var showLogoutAlert = false
     
     var body: some View {
@@ -19,6 +21,8 @@ struct SettingsView1: View {
             // --- ZStack startet hier ---
             ZStack {
                 // 1. Der elegante Hintergrund ganz unten
+                // (Stelle sicher, dass du ParticleBackground2 in deinem Projekt hast,
+                // sonst nimm Color.white oder einen anderen Hintergrund)
                 ParticleBackground2()
                     .ignoresSafeArea()
                 
@@ -55,10 +59,11 @@ struct SettingsView1: View {
                                 .padding(.leading, 5)
                             
                             VStack(spacing: 12) {
-                                SettingRow(icon: "person.fill", title: "Profil", destination:
-                                    AnyView(ProfileDetailView()))
+                                SettingRow(icon: "person.fill", title: "Profil", destination: AnyView(ProfileDetailView()))
                                 SettingRow(icon: "bell.fill", title: "Benachrichtigung", destination: AnyView(NotificationSettingsView()))
-                                SettingRow(icon: "bookmark.fill", title: "Gespeichert", destination: AnyView(SavedItemsView()))
+                                
+                          
+                              
                             }
                         }
                         
@@ -101,7 +106,6 @@ struct SettingsView1: View {
                                 }
                                 .padding()
                                 .foregroundColor(.red)
-                                // Nutze opacity, damit der Hintergrund etwas durchscheint
                                 .background(Color(UIColor.systemGray4).opacity(0.8))
                                 .cornerRadius(12)
                             }
@@ -121,12 +125,12 @@ struct SettingsView1: View {
                 .background(Color.clear) // ScrollView transparent halten
             }
             .navigationTitle("Einstellungen")
-            // NavigationStack Hintergrund auf clear setzen, damit ZStack durchkommt
             .toolbarBackground(.hidden, for: .navigationBar)
         }
     }
 }
 
+// Hilfs-Struktur für die Zeilen (unverändert, aber hier der Vollständigkeit halber)
 struct SettingRow: View {
     let icon: String
     let title: String
@@ -151,7 +155,6 @@ struct SettingRow: View {
                     .foregroundColor(.gray)
             }
             .padding()
-            // Hier habe ich opacity hinzugefügt (0.8), das wirkt edler mit den Partikeln
             .background(Color(UIColor.systemGray4).opacity(0.8))
             .cornerRadius(12)
         }
