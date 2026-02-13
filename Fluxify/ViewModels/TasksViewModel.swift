@@ -8,7 +8,6 @@ class TasksViewModel: ObservableObject {
     @Published var quizCompleted = false
     @Published var lives = 3
     @Published var isGameOver = false
-
     @Published var selectedAnswer: String?
     @Published var isAnswerChecked = false
     @Published var isAnswerCorrect: Bool?
@@ -18,7 +17,7 @@ class TasksViewModel: ObservableObject {
 
     init(lessonTitle: String = "") {
         self.lessonTitle = lessonTitle
-        // Removed fetchTasks() from here - must initialize all properties first
+        fetchTasks() // Fetch tasks on init
     }
 
     func fetchTasks() {
@@ -46,10 +45,25 @@ class TasksViewModel: ObservableObject {
     }
 
     func checkAnswer() {
-        guard let currentTask = currentTask, let selectedAnswer = selectedAnswer else { return }
+        guard let currentTask = currentTask else { return }
         
         isAnswerChecked = true
-        let isCorrect = selectedAnswer == currentTask.correctAnswer
+        
+        var isCorrect = false
+        
+        switch currentTask.type {
+        case .multipleChoice, .tapToReveal, .match:
+            isCorrect = selectedAnswer == currentTask.correctAnswer
+            
+        case .dragAndDrop, .sequence:
+            // These set "correct" or "wrong" directly
+            isCorrect = selectedAnswer == "correct"
+            
+        case .slider:
+            // Slider sets "correct" or "wrong" directly
+            isCorrect = selectedAnswer == "correct"
+        }
+        
         isAnswerCorrect = isCorrect
         
         if isCorrect {
@@ -61,6 +75,7 @@ class TasksViewModel: ObservableObject {
             }
         }
     }
+    
     
     func nextTask() {
         if currentTaskIndex < tasks.count - 1 {
