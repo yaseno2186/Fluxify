@@ -80,7 +80,14 @@ class TasksViewModel: ObservableObject {
     func nextTask() {
         if currentTaskIndex < tasks.count - 1 {
             currentTaskIndex += 1
-            resetQuestionState()
+            if currentTaskIndex < tasks.count {
+                UserViewModel.shared.updateProgress(
+                    lessonTitle: lessonTitle,
+                    completedTasks: currentTaskIndex + 1,
+                    totalTasks: tasks.count
+                )
+                resetQuestionState()
+            }
         } else {
             quizCompleted = true
         }
