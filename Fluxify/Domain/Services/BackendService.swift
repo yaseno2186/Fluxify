@@ -20,10 +20,26 @@ class BackendService {
     func fetchLessons(completion: @escaping ([Lesson]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let lessons = [
-                Lesson(title: NSLocalizedString("lesson_microwave_title", comment: ""), description: NSLocalizedString("lesson_microwave_description", comment: ""), iconName: "waves.and.rays"),
-                Lesson(title: NSLocalizedString("lesson_refrigerator_title", comment: ""), description: NSLocalizedString("lesson_refrigerator_description", comment: ""), iconName: "refrigerator"),
-                Lesson(title: NSLocalizedString("lesson_induction_title", comment: ""), description: NSLocalizedString("lesson_induction_description", comment: ""), iconName: "heater.vertical"),
-                Lesson(title: NSLocalizedString("lesson_gps_title", comment: ""), description: NSLocalizedString("lesson_gps_description", comment: ""), iconName: "globe.americas")
+                Lesson(
+                    title: NSLocalizedString("Mikrowelle", comment: ""),
+                    iconName: "microwave.fill",
+                    category: .waermelehre  // Mikrowelle is Wärmelehre
+                ),
+                Lesson(
+                    title: NSLocalizedString("Kühlschrank", comment: ""),
+                    iconName: "refrigerator",
+                    category: .waermelehre  // Kühlschrank is Wärmelehre
+                ),
+                Lesson(
+                    title: NSLocalizedString("Induktion", comment: ""),
+                    iconName: "heater.vertical",
+                    category: .elektromagnetismus  // Induktion is Elektromagnetismus
+                ),
+                Lesson(
+                    title: NSLocalizedString("GPS", comment: ""),
+                    iconName: "globe.americas",
+                    category: .experten  // GPS is Experten
+                )
             ]
             completion(lessons)
         }
@@ -351,7 +367,13 @@ class BackendService {
                 username: "testuser",
                 streak: 5,
                 league: "Gold",
-                savedTasks: []
+                savedTasks: [],
+                lessonProgress: [
+                    LessonProgress(lessonTitle: "Mikrowelle", completedTasks: 0, totalTasks: 8),
+                    LessonProgress(lessonTitle: "Kühlschrank", completedTasks: 0, totalTasks: 6),
+                    LessonProgress(lessonTitle: "Induktion", completedTasks: 0, totalTasks: 2),
+                    LessonProgress(lessonTitle: "GPS", completedTasks: 0, totalTasks: 2)
+                ]
             )
             completion(user)
         }
