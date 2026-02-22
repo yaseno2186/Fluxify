@@ -96,7 +96,7 @@ struct TaskDetailView: View {
                             VStack(spacing: 10) {
                                 if let reasoning = task.reasoning {
                                     Text(reasoning)
-                                        .font(.subheadline)
+                                        .font(.system(size: 20))
                                         .foregroundColor(.secondary)
                                         .padding(.horizontal)
                                 }
@@ -252,6 +252,19 @@ struct GameOverView: View {
             
             Button(action: onRetry) {
                 Text("Try Again")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: 200)
+                    .background(Color.red)
+                    .cornerRadius(12)
+            }
+            .padding(.top, 10)
+            Button(action: {
+                onRetry()
+            }) {
+                Text("Home")
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
