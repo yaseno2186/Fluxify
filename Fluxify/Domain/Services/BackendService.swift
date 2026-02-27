@@ -162,9 +162,9 @@ class BackendService {
                 // Multiple Choice (existing)
                 Task(
                     type: .multipleChoice,
-                    question: "Wie heißt diese Komponente im Kühlschrank?",
-                    imageName: ["refrigerator"],
-                    options: ["Kondensator", "Verdampfer", "Expansionsventil", "Kompressor"],
+                    question: "Wie heißt das untere Teil im Kühlschrank?",
+                    imageName: ["Fridge Image"],
+                    options: ["Kondensator", "Verdampfer", "Kompressor", "Expansionsventil" ],
                     correctAnswer: "Kompressor",
                     dragItems: nil,
                     dropZones: nil,
@@ -178,20 +178,20 @@ class BackendService {
                 Task(
                     type: .dragAndDrop,
                     question: "Ziehe die Teile an die richtige Stelle im Kältekreislauf!",
-                    imageName: ["refrigerator"],
+                    imageName: ["Fridge Image"],
                     options: nil,
                     correctAnswer: nil,
                     dragItems: [
                         DragItem(text: "Kompressor", correctZoneId: "bottom", imageName: "bolt.fill"),        // or "gearshape.fill"
-                        DragItem(text: "Kondensator", correctZoneId: "back", imageName: "flame.fill"),        // or "radiator"
-                        DragItem(text: "Expansionsventil", correctZoneId: "inside_top", imageName: "arrow.down.circle"), // or "arrow.down.circle"
-                        DragItem(text: "Verdampfer", correctZoneId: "inside_back", imageName: "snowflake")    // or "wind"
+                        DragItem(text: "Kondensator", correctZoneId: "left", imageName: "flame.fill"),        // or "radiator"
+                        DragItem(text: "Expansionsventil", correctZoneId: "top", imageName: "arrow.down.circle"), // or "arrow.down.circle"
+                        DragItem(text: "Verdampfer", correctZoneId: "right", imageName: "snowflake")    // or "wind"
                     ],
                     dropZones: [
                         DropZone(id: "bottom", label: "Unten", imageName: nil, position: CGPoint(x: 0.5, y: 0.9)),   // bottom center
-                        DropZone(id: "inside_back", label: "Hinten", imageName: nil, position: CGPoint(x: 0.9, y: 0.5)),   // right side
-                        DropZone(id: "inside_top", label: "Oben innen", imageName: nil, position: CGPoint(x: 0.3, y: 0.2)), // top left inside
-                        DropZone(id: "back", label: "Innen", imageName: nil, position: CGPoint(x: 0.1, y: 0.5))    // left side inside
+                        DropZone(id: "right", label: "Rechts", imageName: nil, position: CGPoint(x: 0.7, y: 0.5)),   // right side
+                        DropZone(id: "top", label: "Oben", imageName: nil, position: CGPoint(x: 0.3, y: 0.2)), // top left inside
+                        DropZone(id: "left", label: "Links", imageName: nil, position: CGPoint(x: 0.3, y: 0.5))    // left side inside
                     ],
                     sliderConfig: nil,
                     sequenceItems: nil,

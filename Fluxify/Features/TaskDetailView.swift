@@ -286,10 +286,19 @@ struct MultipleChoiceContent: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            // Check if it's an SF Symbol or Asset image
             if let images = task.imageName, let firstImage = images.first {
-                Image(systemName: firstImage)
-                    .font(.system(size: 100))
-                    .padding()
+                if UIImage(systemName: firstImage) != nil {
+                    // It's an SF Symbol
+                    Image(systemName: firstImage)
+                        .font(.system(size: 100))
+                } else {
+                    // It's an asset image
+                    Image(firstImage)  // Just use the name from Assets.xcassets
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                }
             }
             
             VStack(spacing: 15) {
@@ -319,40 +328,71 @@ struct DragAndDropContent: View {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.gray.opacity(0.1))
                 
-                // Fridge diagram
-                GenericDiagramView(
-                    dropZones: task.dropZones ?? [],
-                    placedItems: placedItems,
-                    selectedItem: $selectedItem,
-                    onZoneTap: { zoneId in
-                        if let item = selectedItem {
-                            placeItem(item, in: zoneId)
+                // Display the background image (refrigerator diagram) if available
+                if let images = task.imageName, let firstImage = images.first {
+                    GeometryReader { geometry in
+                        ZStack {
+                            // Background image - using same logic as MultipleChoiceContent
+                            if UIImage(systemName: firstImage) != nil {
+                                // It's an SF Symbol
+                                Image(systemName: firstImage)
+                                    .font(.system(size: 120))
+                                    .foregroundColor(.gray.opacity(0.3))
+                            } else {
+                                // It's an asset image
+                                Image(firstImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .opacity(0.3) // Make it subtle so drop zones are visible
+                            }
+                            
+                            // Drop zones overlay
+                            GenericDiagramView(
+                                dropZones: task.dropZones ?? [],
+                                placedItems: placedItems,
+                                selectedItem: $selectedItem,
+                                onZoneTap: { zoneId in
+                                    if let item = selectedItem {
+                                        placeItem(item, in: zoneId)
+                                    }
+                                }
+                            )
                         }
                     }
-                )
-                .padding()
+                } else {
+                    // No image, just show the diagram
+                    GenericDiagramView(
+                        dropZones: task.dropZones ?? [],
+                        placedItems: placedItems,
+                        selectedItem: $selectedItem,
+                        onZoneTap: { zoneId in
+                            if let item = selectedItem {
+                                placeItem(item, in: zoneId)
+                            }
+                        }
+                    )
+                }
             }
             .frame(maxHeight: .infinity) // Expand to fill space
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(availableItems) { item in
-                            LabelButton(
-                                item: item,
-                                isSelected: selectedItem?.id == item.id
-                            ) {
-                                selectedItem = item
-                            }
+            // Draggable items at bottom
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(availableItems) { item in
+                        LabelButton(
+                            item: item,
+                            isSelected: selectedItem?.id == item.id
+                        ) {
+                            selectedItem = item
                         }
                     }
-                    .padding(.horizontal)
                 }
-            
+                .padding(.horizontal)
+            }
             .padding(5)
             .background(Color.gray.opacity(0.05))
             .cornerRadius(16)
         }
-    
         .padding(.horizontal)
     }
     
@@ -391,7 +431,6 @@ struct DragAndDropContent: View {
             print("Set selectedAnswer to: \(viewModel.selectedAnswer ?? "nil")")
         }
     }
-    
 }
 
 // MARK: - Label Button (Horizontal layout)
@@ -563,30 +602,55 @@ struct SliderContent: View {
         _currentValue = State(initialValue: initialValue)
     }
     
+    // Check if the current answer is correct
+    private var isCorrect: Bool {
+        guard let config = task.sliderConfig else { return false }
+        return abs(currentValue - config.correctValue) <= config.tolerance
+    }
+    
+    // Determine circle color based on state
+    private var circleColor: Color {
+        if viewModel.isAnswerChecked {
+            return isCorrect ? .green : .red
+        } else {
+            return .gray.opacity(0.3) // Default color when not checked
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 30) {
             // Value display - glass effect circle
             ZStack {
-                // Subtle glass background
+                // Background circle that changes color when checked
+                if viewModel.isAnswerChecked {
+                    Circle()
+                        .fill(isCorrect ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
+                } else {
+                    Circle()
+                        .fill(.ultraThinMaterial)
+                }
+                // Border that changes color when checked
                 Circle()
-                    .fill(.ultraThinMaterial)
-                    .frame(width: 150, height: 150)
-                
-                // Border to define the circle
-                Circle()
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 2)
+                    .stroke(
+                        viewModel.isAnswerChecked ?
+                            (isCorrect ? Color.green : Color.red) :
+                            Color.gray.opacity(0.3),
+                        lineWidth: 3
+                    )
                     .frame(width: 150, height: 150)
                 
                 VStack {
                     Text("\(Int(currentValue))")
                         .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.primary)
+                        .foregroundColor(viewModel.isAnswerChecked ? (isCorrect ? .green : .red) : .primary)
                     Text(task.sliderConfig?.unit ?? "")
                         .font(.system(size: 24))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(viewModel.isAnswerChecked ? (isCorrect ? .green : .red) : .secondary)
                 }
             }
-            
+            .animation(.easeInOut(duration: 0.3), value: viewModel.isAnswerChecked)
+            .animation(.easeInOut(duration: 0.3), value: isCorrect)
+
             // Slider with colored track
             VStack(spacing: 10) {
                 GeometryReader { geometry in
@@ -614,6 +678,7 @@ struct SliderContent: View {
                             EmptyView()
                         }
                         .tint(.clear) // Makes the slider's native track invisible
+                        .disabled(viewModel.isAnswerChecked) // Disable slider after checking
                         .onChange(of: currentValue) {
                             checkAnswer()
                         }
