@@ -5,7 +5,7 @@ class TasksViewModel: ObservableObject {
     @Published var tasks = [Task]()
     @Published var currentTaskIndex = 0
     @Published var score = 0
-    @Published var quizCompleted = false
+    @Published var taskCompleted = false
     @Published var lives = 3
     @Published var isGameOver = false
     @Published var selectedAnswer: String?
@@ -35,11 +35,11 @@ class TasksViewModel: ObservableObject {
         return tasks[currentTaskIndex]
     }
     
-    func startQuiz() {
+    func startTasks() {
         currentTaskIndex = 0
         score = 0
         lives = 3
-        quizCompleted = false
+        taskCompleted = false
         isGameOver = false
         resetQuestionState()
     }
@@ -52,15 +52,13 @@ class TasksViewModel: ObservableObject {
         var isCorrect = false
         
         switch currentTask.type {
-        case .multipleChoice, .tapToReveal, .match:
+        case .multipleChoice, .match:
             isCorrect = selectedAnswer == currentTask.correctAnswer
             
         case .dragAndDrop, .sequence:
-            // These set "correct" or "wrong" directly
             isCorrect = selectedAnswer == "correct"
             
         case .slider:
-            // Slider sets "correct" or "wrong" directly
             isCorrect = selectedAnswer == "correct"
         }
         
@@ -69,9 +67,12 @@ class TasksViewModel: ObservableObject {
         if isCorrect {
             score += 1
         } else {
-            lives -= 1
-            if lives <= 0 {
-                isGameOver = true
+            // Only decrease lives if above 0, and check for game over
+            if lives > 0 {
+                lives -= 1
+                if lives <= 0 {
+                    isGameOver = true
+                }
             }
         }
     }
@@ -89,7 +90,7 @@ class TasksViewModel: ObservableObject {
                 resetQuestionState()
             }
         } else {
-            quizCompleted = true
+            taskCompleted = true
         }
     }
     

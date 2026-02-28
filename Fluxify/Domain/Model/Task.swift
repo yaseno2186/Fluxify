@@ -4,7 +4,6 @@ enum TaskType: String, CaseIterable {
     case multipleChoice = "multiple_choice"
     case dragAndDrop = "drag_and_drop"
     case slider = "slider"
-    case tapToReveal = "tap_to_reveal"
     case sequence = "sequence"
     case match = "match"
 }
