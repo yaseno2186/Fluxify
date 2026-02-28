@@ -75,8 +75,6 @@ struct TaskDetailView: View {
                                 SliderContent(task: task, viewModel: viewModel)
                             case .sequence:
                                 SequenceContent(task: task, viewModel: viewModel)
-                            case .tapToReveal:
-                                TapToRevealContent(task: task, viewModel: viewModel)
                             case .match:
                                 MatchContent(task: task, viewModel: viewModel)
                             }
@@ -141,15 +139,25 @@ struct TaskDetailView: View {
                     }
             }
         }
-        .sheet(isPresented: $viewModel.isGameOver) {
-            GameOverView(score: viewModel.score) {
-                viewModel.startQuiz()
-            }
-        }
-        .sheet(isPresented: $viewModel.quizCompleted) {
-            QuizResultView(score: viewModel.score, totalQuestions: viewModel.tasks.count) {
-                viewModel.startQuiz()
-            }
+       
+        .sheet(isPresented: $viewModel.taskCompleted) {
+            TaskCompletionView(
+                score: viewModel.score,
+                totalQuestions: viewModel.tasks.count,
+                livesLeft: viewModel.lives,
+                difficulty: "Mittel",
+                onContinue: {
+                    viewModel.taskCompleted = false
+                    dismiss()
+                },
+                onRetry: {
+                    viewModel.startTasks()
+                },
+                onHome: {  // NEW: Home button action
+                    viewModel.taskCompleted = false
+                    dismiss()
+                }
+            )
         }
     }
 }
@@ -194,88 +202,277 @@ struct AnswerButton: View {
     }
 }
 
-struct QuizResultView: View {
+// MARK: - Task Completion View
+struct TaskCompletionView: View {
     let score: Int
     let totalQuestions: Int
+    let livesLeft: Int
+    let difficulty: String
+    let onContinue: () -> Void
     let onRetry: () -> Void
+    let onHome: () -> Void  // NEW: Home button action
+    
+    @State private var showAnimation = false
+    @State private var showScore = false
+    @State private var showDetails = false
+    @State private var showButtons = false
+    
+    private var percentage: Int {
+        Int((Double(score) / Double(totalQuestions)) * 100)
+    }
+    
+    private var rating: String {
+        switch percentage {
+        case 90...100: return "Perfekt! ⭐️"
+        case 70..<90: return "Sehr gut! 👍"
+        case 50..<70: return "Gut gemacht! ✨"
+        default: return "Weiter üben! 💪"
+        }
+    }
+    
+    private var ratingColor: Color {
+        switch percentage {
+        case 90...100: return .green
+        case 70..<90: return .blue
+        case 50..<70: return .orange
+        default: return .red
+        }
+    }
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Quiz Completed!")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                colors: [ratingColor.opacity(0.3), Color(UIColor.systemBackground)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
             
-            Text("Your score: \(score)/\(totalQuestions)")
-                .font(.title2)
-            
-            Button(action: onRetry) {
-                Text("Retry Quiz")
-                    .font(.headline)
-                    .fontWeight(.bold)
+            VStack(spacing: 0) {
+                Spacer()
+                
+                // Success Animation Circle
+                ZStack {
+                    // Outer pulsing rings
+                    if showAnimation {
+                        Circle()
+                            .stroke(ratingColor.opacity(0.3), lineWidth: 2)
+                            .frame(width: 200, height: 200)
+                            .scaleEffect(showAnimation ? 1.2 : 0.8)
+                            .opacity(showAnimation ? 0 : 1)
+                            .animation(.easeOut(duration: 1).repeatForever(autoreverses: false), value: showAnimation)
+                    }
+                    
+                    // Main circle
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [ratingColor, ratingColor.opacity(0.7)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 150, height: 150)
+                        .shadow(color: ratingColor.opacity(0.5), radius: 20, x: 0, y: 10)
+                    
+                    // Checkmark or trophy
+                    Image(systemName: percentage >= 70 ? "checkmark" : "trophy.fill")
+                        .font(.system(size: 70, weight: .bold))
+                        .foregroundColor(.white)
+                        .scaleEffect(showAnimation ? 1 : 0)
+                        .rotationEffect(.degrees(showAnimation ? 0 : -180))
+                        .animation(.spring(response: 0.6, dampingFraction: 0.6), value: showAnimation)
+                }
+                .padding(.bottom, 30)
+                
+                // Rating text
+                Text(rating)
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(ratingColor)
+                    .opacity(showScore ? 1 : 0)
+                    .offset(y: showScore ? 0 : 20)
+                    .animation(.easeOut(duration: 0.5).delay(0.3), value: showScore)
+                
+                // Score
+                HStack(spacing: 8) {
+                    Text("\(score)")
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.primary)
+                    
+                    Text("/ \(totalQuestions)")
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(.secondary)
+                }
+                .opacity(showScore ? 1 : 0)
+                .offset(y: showScore ? 0 : 20)
+                .animation(.easeOut(duration: 0.5).delay(0.4), value: showScore)
+                
+                // Percentage badge
+                Text("\(percentage)%")
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .background(
+                        Capsule()
+                            .fill(ratingColor)
+                    )
+                    .opacity(showScore ? 1 : 0)
+                    .offset(y: showScore ? 0 : 20)
+                    .animation(.easeOut(duration: 0.5).delay(0.5), value: showScore)
+                
+                Spacer()
+                
+                // Stats Cards
+                VStack(spacing: 16) {
+                    HStack(spacing: 16) {
+                        // Difficulty Card
+                        TaskStatCard(
+                            icon: "chart.bar.fill",
+                            title: "Schwierigkeit",
+                            value: difficulty,
+                            color: .purple
+                        )
+                        
+                        // Hearts Card
+                        TaskStatCard(
+                            icon: "heart.fill",
+                            title: "Übrige Herzen",
+                            value: "\(livesLeft)",
+                            color: .red
+                        )
+                    }
+                    
+                    // Performance message
+                    VStack(spacing: 8) {
+                        Image(systemName: "star.fill")
+                            .font(.title2)
+                            .foregroundColor(.yellow)
+                        
+                        Text(performanceMessage)
+                            .font(.subheadline)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
                     .padding()
-                    .frame(maxWidth: 200)
-                    .background(Color.blue)
-                    .cornerRadius(12)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color(UIColor.secondarySystemGroupedBackground))
+                    )
+                }
+                .padding(.horizontal, 24)
+                .opacity(showDetails ? 1 : 0)
+                .offset(y: showDetails ? 0 : 30)
+                .animation(.easeOut(duration: 0.6).delay(0.6), value: showDetails)
+                
+                Spacer()
+                
+                // Action Buttons -Weiter & Home-
+                VStack(spacing: 12) {
+                    // Primary: Continue button
+                    Button(action: onContinue) {
+                        HStack(spacing: 8) {
+                            Text("Weiter")
+                                .font(.headline)
+                            Image(systemName: "arrow.right")
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(ratingColor)
+                        )
+                    }
+                    
+                    // Secondary buttons row
+                    HStack(spacing: 12) {
+                        // Retry button
+                        Button(action: onRetry) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "arrow.counterclockwise")
+                                Text("Wiederholen")
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(UIColor.secondarySystemGroupedBackground))
+                            )
+                        }
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 30)
+                .opacity(showButtons ? 1 : 0)
+                .offset(y: showButtons ? 0 : 20)
+                .animation(.easeOut(duration: 0.5).delay(0.8), value: showButtons)
             }
         }
-        .padding()
+        .onAppear {
+            // Trigger animations sequentially
+            withAnimation {
+                showAnimation = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                showScore = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                showDetails = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                showButtons = true
+            }
+        }
+    }
+    
+    private var performanceMessage: String {
+        if livesLeft == 3 && score == totalQuestions {
+            return "Perfekter Durchlauf! Du hast alle Fragen richtig beantwortet und keine Herzen verloren!"
+        } else if score == totalQuestions {
+            return "Hervorragend! Alle Fragen richtig beantwortet!"
+        } else if livesLeft > 0 {
+            return "Gut gemacht! Du hast \(score) von \(totalQuestions) Fragen richtig beantwortet."
+        } else {
+            return "Knapp geschafft! Übe weiter, um besser zu werden."
+        }
     }
 }
 
-// NEW: Game Over View
-struct GameOverView: View {
-    let score: Int
-    let onRetry: () -> Void
+// MARK: - Task Stat Card
+struct TaskStatCard: View {
+    let icon: String
+    let title: String
+    let value: String
+    let color: Color
     
     var body: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "heart.slash.fill")
-                .font(.system(size: 60))
-                .foregroundColor(.red)
+        VStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 28))
+                .foregroundColor(color)
             
-            Text("Game Over!")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.red)
-            
-            Text("You ran out of lives")
-                .font(.title3)
-                .foregroundColor(.secondary)
-            
-            Text("Final Score: \(score)")
-                .font(.headline)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 20)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(8)
-            
-            Button(action: onRetry) {
-                Text("Try Again")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: 200)
-                    .background(Color.red)
-                    .cornerRadius(12)
+            VStack(spacing: 4) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text(value)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.primary)
             }
-            .padding(.top, 10)
-            Button(action: {
-                onRetry()
-            }) {
-                Text("Home")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: 200)
-                    .background(Color.red)
-                    .cornerRadius(12)
-            }
-            .padding(.top, 10)
         }
+        .frame(maxWidth: .infinity)
         .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(UIColor.secondarySystemGroupedBackground))
+        )
     }
 }
 // MARK: - Task Type Content Views
@@ -729,65 +926,125 @@ struct SequenceContent: View {
     let task: Task
     @ObservedObject var viewModel: TasksViewModel
     @State private var selectedItems: [SequenceItem] = []
+    @State private var showSuccessAnimation = false
+    
+    // Check if all items are placed
+    private var allItemsPlaced: Bool {
+        selectedItems.count == (task.sequenceItems?.count ?? 0)
+    }
     
     var body: some View {
         VStack(spacing: 20) {
-            // Current sequence
-            VStack(spacing: 10) {
-                Text("Deine Reihenfolge:")
-                    .font(.headline)
-                
-                ForEach(Array(selectedItems.enumerated()), id: \.element.id) { index, item in
-                    HStack {
-                        Text("\(index + 1).")
-                            .font(.title3)
-                            .foregroundColor(.blue)
-                        Text(item.text)
-                            .padding()
-                            .background(Color.green.opacity(0.2))
-                            .cornerRadius(8)
-                        Spacer()
-                        Button {
-                            selectedItems.removeAll { $0.id == item.id }
+            // Visual timeline at top
+            if !selectedItems.isEmpty {
+                VStack(spacing: 12) {
+                    Text("Deine Reihenfolge:")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    // Horizontal connected timeline
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 0) {
+                            ForEach(Array(selectedItems.enumerated()), id: \.element.id) { index, item in
+                                HStack(spacing: 0) {
+                                    // Timeline node
+                                    TimelineNode(
+                                        number: index + 1,
+                                        text: item.text,
+                                        imageName: item.imageName,
+                                        isCorrect: viewModel.isAnswerChecked ? item.correctPosition == index + 1 : nil,
+                                        onRemove: {
+                                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                selectedItems.removeAll { $0.id == item.id }
+                                                checkCompletion()
+                                            }
+                                        }
+                                    )
+                                    
+                                    // Connector line (except for last item)
+                                    if index < selectedItems.count - 1 {
+                                        ConnectorLine()
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .frame(height: 120)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(UIColor.secondarySystemGroupedBackground))
+                        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                )
+                .padding(.horizontal)
+            } else {
+                // Empty state with instruction
+                VStack(spacing: 12) {
+                    Image(systemName: "arrow.down.circle.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.blue)
+                        .symbolEffect(.bounce, value: selectedItems.count)
+                    
+                    Text("Tippe die Schritte in der richtigen Reihenfolge")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Baue den Kältekreislauf Schritt für Schritt auf")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.vertical, 30)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.blue.opacity(0.3), lineWidth: 2)
+                        .fill(Color.blue.opacity(0.05))
+                )
+                .padding(.horizontal)
+            }
+            
+            // Divider with animation hint
+            if !allItemsPlaced {
+                HStack(spacing: 8) {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(height: 1)
+                    
+                    HStack(spacing: 4) {
+                        Image(systemName: "hand.tap.fill")
+                            .font(.caption)
+                        Text("Verfügbare Schritte")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .foregroundColor(.secondary)
+                    
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(height: 1)
+                }
+                .padding(.horizontal)
+            }
+            
+            // Available items as attractive cards
+            LazyVStack(spacing: 12) {
+                ForEach(availableItems) { item in
+                    SequenceCard(item: item, position: nil) {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                            selectedItems.append(item)
                             checkCompletion()
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.red)
                         }
                     }
-                }
-                
-                if selectedItems.isEmpty {
-                    Text("Tippe die Schritte in Reihenfolge")
-                        .foregroundColor(.gray)
-                        .italic()
+                    .disabled(viewModel.isAnswerChecked)
+                    .opacity(viewModel.isAnswerChecked ? 0.5 : 1)
                 }
             }
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
-            
-            Divider()
-            
-            // Available items
-            ForEach(availableItems) { item in
-                Button {
-                    selectedItems.append(item)
-                    checkCompletion()
-                } label: {
-                    HStack {
-                        Image(systemName: item.imageName ?? "circle")
-                        Text(item.text)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.blue.opacity(0.2))
-                    .cornerRadius(8)
-                }
-                .disabled(viewModel.isAnswerChecked)
-            }
+            .padding(.horizontal)
         }
-        .padding()
+        .padding(.vertical)
     }
     
     private var availableItems: [SequenceItem] {
@@ -804,27 +1061,172 @@ struct SequenceContent: View {
     }
 }
 
-struct TapToRevealContent: View {
-    let task: Task
-    @ObservedObject var viewModel: TasksViewModel
+// MARK: - Timeline Node (for the sequence display)
+struct TimelineNode: View {
+    let number: Int
+    let text: String
+    let imageName: String?
+    let isCorrect: Bool? // nil = not checked, true = correct, false = wrong
+    let onRemove: () -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Tap to Reveal - Coming Soon")
-                .foregroundColor(.gray)
+        VStack(spacing: 8) {
+            // Number circle with status
+            ZStack {
+                Circle()
+                    .fill(backgroundColor)
+                    .frame(width: 44, height: 44)
+                    .shadow(color: shadowColor, radius: 4, x: 0, y: 2)
+                
+                if let isCorrect = isCorrect {
+                    Image(systemName: isCorrect ? "checkmark" : "xmark")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                } else {
+                    Text("\(number)")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.white)
+                }
+            }
             
-            // Placeholder for tap zones
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.gray.opacity(0.2))
-                .frame(height: 200)
-                .overlay(
-                    Text("Tap zones will appear here")
-                        .foregroundColor(.gray)
-                )
+            // Icon if available
+            if let imageName = imageName {
+                Image(systemName: imageName)
+                    .font(.system(size: 24))
+                    .foregroundColor(iconColor)
+            }
+            
+            // Text label
+            Text(text)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .frame(width: 80)
+            
+            // Remove button (only when not checked)
+            if isCorrect == nil {
+                Button(action: onRemove) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.red.opacity(0.7))
+                }
+            }
         }
-        .padding()
+        .frame(width: 90)
+    }
+    
+    private var backgroundColor: Color {
+        guard let isCorrect = isCorrect else { return .blue }
+        return isCorrect ? .green : .red
+    }
+    
+    private var shadowColor: Color {
+        guard let isCorrect = isCorrect else { return .blue.opacity(0.3) }
+        return isCorrect ? .green.opacity(0.3) : .red.opacity(0.3)
+    }
+    
+    private var iconColor: Color {
+        guard let isCorrect = isCorrect else { return .blue }
+        return isCorrect ? .green : .red
     }
 }
+
+// MARK: - Connector Line
+struct ConnectorLine: View {
+    var body: some View {
+        HStack(spacing: 0) {
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [.blue.opacity(0.3), .cyan.opacity(0.3)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(width: 30, height: 3)
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(.cyan)
+        }
+        .frame(width: 40)
+    }
+}
+
+// MARK: - Sequence Card (for available items)
+struct SequenceCard: View {
+    let item: SequenceItem
+    let position: Int? // nil = not placed yet
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 16) {
+                // Step number or placeholder
+                ZStack {
+                    if let pos = position {
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 36, height: 36)
+                        Text("\(pos)")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.white)
+                    } else {
+                        Circle()
+                            .stroke(Color.blue.opacity(0.5), lineWidth: 2)
+                            .frame(width: 36, height: 36)
+                        Image(systemName: "plus")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.blue)
+                    }
+                }
+                
+                // Icon
+                if let imageName = item.imageName {
+                    Image(systemName: imageName)
+                        .font(.system(size: 28))
+                        .foregroundColor(.blue)
+                        .frame(width: 40)
+                }
+                
+                // Text
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(item.text)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.leading)
+                    
+                    Text("Schritt \(item.correctPosition) im Kreislauf")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                // Arrow indicator
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.blue.opacity(0.5))
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(UIColor.systemBackground))
+                    .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .scaleEffect(position == nil ? 1.0 : 0.95)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: position)
+    }
+}
+
+
 
 struct MatchContent: View {
     let task: Task

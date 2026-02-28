@@ -239,48 +239,9 @@ class BackendService {
                     ],
                     reasoning: "1. Verdichten → 2. Abkühlen & Verflüssigen → 3. Entspannen → 4. Verdampfen & Kälte erzeugen",
                     tip: "Tipp: Denke an den Kreislauf - es geht immer weiter!"
-                ),
-                
-                // Tap to Reveal: Hot and Cold zones
-                Task(
-                    type: .tapToReveal,
-                    question: "Tippe auf die heißen und kalten Stellen des Kühlschranks!",
-                    imageName: ["fridge_heat_map_hidden"],
-                    options: ["Heiß (Kondensator)", "Kalt (Verdampfer)", "Warm (Kompressor)", "Kühl (Innenraum)"],
-                    correctAnswer: "Heiß (Kondensator),Kalt (Verdampfer)",
-                    dragItems: nil,
-                    dropZones: nil,
-                    sliderConfig: nil,
-                    sequenceItems: nil,
-                    reasoning: "Der Kondensator hinten wird heiß (bis 50°C), weil er Wärme abgibt. Der Verdampfer innen wird kalt (bis -20°C), weil er Wärme aufnimmt.",
-                    tip: "⚠️ Achtung: Die Rückseite des Kühlschranks kann heiß werden!"
-                ),
-                
-                // Match: Connect components with functions
-                Task(
-                    type: .match,
-                    question: "Verbinde die Bauteile mit ihrer Funktion!",
-                    imageName: ["fridge_components"],
-                    options: nil,
-                    correctAnswer: nil,
-                    dragItems: [
-                        DragItem(text: "Kompressor", correctZoneId: "pump", imageName: nil),
-                        DragItem(text: "Kondensator", correctZoneId: "cool", imageName: nil),
-                        DragItem(text: "Verdampfer", correctZoneId: "freeze", imageName: nil),
-                        DragItem(text: "Thermostat", correctZoneId: "control", imageName: nil)
-                    ],
-                    dropZones: [
-                        DropZone(id: "pump", label: "Pumpt das Kältemittel", imageName: nil, position: CGPoint(x: 0.7, y: 0.2)),
-                        DropZone(id: "cool", label: "Gibt Wärme ab", imageName: nil, position: CGPoint(x: 0.7, y: 0.4)),
-                        DropZone(id: "freeze", label: "Nimmt Wärme auf", imageName: nil, position: CGPoint(x: 0.7, y: 0.6)),
-                        DropZone(id: "control", label: "Regelt die Temperatur", imageName: nil, position: CGPoint(x: 0.7, y: 0.8))
-                    ],
-                    sliderConfig: nil,
-                    sequenceItems: nil,
-                    reasoning: "Jedes Teil hat eine spezifische Aufgabe im Kältekreislauf.",
-                    tip: "Tipp: Der Kompressor ist wie ein Herz, das pumpt."
                 )
-            ]   // Induction tasks - Updated
+            ]
+            // Induction tasks - Updated
             let inductionTasks = [
                 Task(
                     type: .multipleChoice,
