@@ -5,10 +5,9 @@ class TasksViewModel: ObservableObject {
     @Published var tasks = [Task]()
     @Published var currentTaskIndex = 0
     @Published var score = 0
-    @Published var quizCompleted = false
+    @Published var taskCompleted = false
     @Published var lives = 3
     @Published var isGameOver = false
-
     @Published var selectedAnswer: String?
     @Published var isAnswerChecked = false
     @Published var isAnswerCorrect: Bool?
@@ -18,7 +17,7 @@ class TasksViewModel: ObservableObject {
 
     init(lessonTitle: String = "") {
         self.lessonTitle = lessonTitle
-        // Removed fetchTasks() from here - must initialize all properties first
+        fetchTasks() // Fetch tasks on init
     }
 
     func fetchTasks() {
@@ -36,38 +35,62 @@ class TasksViewModel: ObservableObject {
         return tasks[currentTaskIndex]
     }
     
-    func startQuiz() {
+    func startTasks() {
         currentTaskIndex = 0
         score = 0
         lives = 3
-        quizCompleted = false
+        taskCompleted = false
         isGameOver = false
         resetQuestionState()
     }
 
     func checkAnswer() {
-        guard let currentTask = currentTask, let selectedAnswer = selectedAnswer else { return }
+        guard let currentTask = currentTask else { return }
         
         isAnswerChecked = true
-        let isCorrect = selectedAnswer == currentTask.correctAnswer
+        
+        var isCorrect = false
+        
+        switch currentTask.type {
+        case .multipleChoice, .match:
+            isCorrect = selectedAnswer == currentTask.correctAnswer
+            
+        case .dragAndDrop, .sequence:
+            isCorrect = selectedAnswer == "correct"
+            
+        case .slider:
+            isCorrect = selectedAnswer == "correct"
+        }
+        
         isAnswerCorrect = isCorrect
         
         if isCorrect {
             score += 1
         } else {
-            lives -= 1
-            if lives <= 0 {
-                isGameOver = true
+            // Only decrease lives if above 0, and check for game over
+            if lives > 0 {
+                lives -= 1
+                if lives <= 0 {
+                    isGameOver = true
+                }
             }
         }
     }
     
+    
     func nextTask() {
         if currentTaskIndex < tasks.count - 1 {
             currentTaskIndex += 1
-            resetQuestionState()
+            if currentTaskIndex < tasks.count {
+                UserViewModel.shared.updateProgress(
+                    lessonTitle: lessonTitle,
+                    completedTasks: currentTaskIndex + 1,
+                    totalTasks: tasks.count
+                )
+                resetQuestionState()
+            }
         } else {
-            quizCompleted = true
+            taskCompleted = true
         }
     }
     
