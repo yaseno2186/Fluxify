@@ -3,7 +3,7 @@
 //  Fluxify
 //
 //  Created by Chingiz on 07.02.26.
-//
+// Human Interfaces eher nicht gewünscht = Reizüberflutung
 
 import SwiftUI
 

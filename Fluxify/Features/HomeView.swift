@@ -114,10 +114,7 @@ struct HomeView: View {
                         
                         if searchText.isEmpty {
                             VStack(spacing: 16) {
-                                NavigationLink(destination: GespeicherteListeView(manager: manager)) {
-                                    SpecialFeatureCard(title: "Gespeichert", icon: "bookmark.fill", color: .indigo, borderColor: .indigo.opacity(0.8))
-                                }
-                                
+                               
                                 NavigationLink(destination: ThemaDetailView(titel: "Mechanik", farbe: .mint, geraete: geraete.filter { $0.kategorie == "Mechanik" }, manager: manager)) {
                                     FeatureCard(title: "Mechanik", icon: "gearshape.2.fill", color: .mint)
                                 }
@@ -138,6 +135,10 @@ struct HomeView: View {
                             .padding(.vertical, 20)
                             
                             VStack(spacing: 16) {
+                                NavigationLink(destination: GespeicherteListeView(manager: manager)) {
+                                    SpecialFeatureCard(title: "Gespeichert", icon: "bookmark.fill", color: .indigo, borderColor: .indigo.opacity(0.8))
+                                }
+                                
                                 NavigationLink(destination: ExpertenListeView(geraete: geraete.filter { $0.kategorie == "Experten Geräte" }, manager: manager)) {
                                     SpecialFeatureCard(title: "Experten Geräte", icon: "graduationcap.fill", color: .blue, borderColor: .blue.opacity(0.8))
                                 }

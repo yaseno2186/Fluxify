@@ -16,7 +16,6 @@ struct FluxifyApp: App {
             Group {
                     AnyView(MainTabView())          // ← wrapped
             }
-            .preferredColorScheme(.dark)
         }
     }
 }
@@ -24,15 +23,12 @@ struct FluxifyApp: App {
 
 struct MainTabView: View {
     var body: some View {
- //       TabView {
- //           HomeView()
- //               .tabItem { Label("", systemImage: "house") }
- //           TipsListView()
- //               .tabItem { Label("", systemImage: "star") }
- //           SettingsView()
- //               .tabItem { Label("", systemImage: "gearshape")}
- //       }
-    }
+        TabView {
+            HomeView()
+                .tabItem { Label("", systemImage: "house") }
+        }
         
     }
+    
+}
 
