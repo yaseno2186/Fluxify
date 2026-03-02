@@ -386,6 +386,34 @@ struct LessonRowView: View {
     }
 }
 
+// Progress Bar Component
+struct ProgressBar: View {
+    let progress: Double // 0.0 to 1.0
+    let color: Color
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) { // Leading alignment for left-to-right progress
+                // Background
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                
+                // Progress fill from left
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(color)
+                    .frame(
+                        width: max(0, min(CGFloat(progress) * geometry.size.width, geometry.size.width)),
+                        height: geometry.size.height
+                    )
+                    .animation(.easeInOut(duration: 0.3), value: progress)
+            }
+        }
+    }
+}
+
+
+// Experten Liste - Shows lessons with experten category
 struct ExpertenListeView: View {
     let lessons: [Lesson]
     @Environment(\.presentationMode) var presentationMode
