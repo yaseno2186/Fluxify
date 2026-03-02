@@ -13,7 +13,7 @@ struct ProfileView: View {
         ZStack{
             
             
-            ParticleBackground1()
+            ParticleBackground()
                 .ignoresSafeArea()
             
             Text("Profil")

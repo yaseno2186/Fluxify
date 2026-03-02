@@ -4,27 +4,39 @@
 //
 //  Created by Bahinaz on 29.01.26.
 //
-//
-//  NewHome.swift
-//  Fluxify
-//
-//  Created by Bahinaz on 29.01.26.
-//
 
 import SwiftUI
-internal import Combine
-import Foundation
+
+
+
+
+import SwiftUI
+
+
 
 struct HomeView: View {
-    @StateObject private var manager = SavedGeraeteManager()
     @State private var searchText = ""
-    @StateObject private var viewModel = HomeViewModel()
     
-    var gefilterteLessons: [Lesson] {
+    let geraete = [
+        Geraet(name: "Auto", kategorie: "Mechanik", icon: "car.fill"),
+        Geraet(name: "Fahrrad", kategorie: "Mechanik", icon: "bicycle"),
+        Geraet(name: "Flaschenzug", kategorie: "Mechanik", icon: "arrow.down.circle.fill"),
+        Geraet(name: "Generator", kategorie: "Elektromagnetismus", icon: "bolt.batteryblock.fill"),
+        Geraet(name: "Heizung", kategorie: "Wärmelehre", icon: "thermometer.sun.fill"),
+        Geraet(name: "Herd", kategorie: "Wärmelehre", icon: "flame.fill"),
+        Geraet(name: "Kühlschrank", kategorie: "Wärmelehre", icon: "snowflake"),
+        Geraet(name: "Lautsprecher", kategorie: "Elektromagnetismus", icon: "speaker.wave.2.fill"),
+        Geraet(name: "Radio", kategorie: "Elektromagnetismus", icon: "radio.fill"),
+        Geraet(name: "Fotoapparat", kategorie: "Optik", icon: "camera.fill"),
+        Geraet(name: "Spiegel", kategorie: "Optik", icon: "rectangle.fill"),
+        Geraet(name: "Taschenlampe", kategorie: "Optik", icon: "flashlight.on.fill"),
+        Geraet(name: "Ultraschallgerät", kategorie: "Experten Geräte", icon: "waveform"),
+        Geraet(name: "Zentrifuge", kategorie: "Experten Geräte", icon: "rotate.3d")
+    ]
+    
+    var gefilterteGeraete: [Geraet] {
         if searchText.isEmpty { return [] }
-        return viewModel.lessons.filter {
-            $0.title.lowercased().hasPrefix(searchText.lowercased())
-        }
+        return geraete.filter { $0.name.lowercased().hasPrefix(searchText.lowercased()) }
     }
     
     var body: some View {
@@ -41,7 +53,7 @@ struct HomeView: View {
                         .padding(.top, 50)
                     
                     // Suchleiste
-                    SuchLeiste(searchText: $searchText, lessons: viewModel.lessons)
+                    SuchLeiste(searchText: $searchText, geraete: geraete)
                     
                     if searchText.isEmpty {
                         // Vier Themen-Kacheln
@@ -49,8 +61,8 @@ struct HomeView: View {
                             NavigationLink(destination:
                                 ThemaDetailView(
                                     titel: "Mechanik",
-                                    color: .mint,
-                                    category: .mechanik
+                                    farbe: .mint,
+                                    geraete: geraete.filter { $0.kategorie == "Mechanik" }
                                 )
                             ) {
                                 FeatureCard(title: "Mechanik", icon: "gearshape.2.fill", color: .mint)
@@ -59,18 +71,18 @@ struct HomeView: View {
                             NavigationLink(destination:
                                 ThemaDetailView(
                                     titel: "Elektromagnetismus",
-                                    color: .red,
-                                    category: .elektromagnetismus
+                                    farbe: .red,
+                                    geraete: geraete.filter { $0.kategorie == "Elektromagnetismus" }
                                 )
                             ) {
-                                FeatureCard(title: "Elektromagnetismus", icon: "bolt.fill", color: .red)
+                                FeatureCard(title: "Elektromagnetismus", icon: "minus.plus.batteryblock.fill", color: .red)
                             }
                             
                             NavigationLink(destination:
                                 ThemaDetailView(
                                     titel: "Wärmelehre",
-                                    color: .orange,
-                                    category: .waermelehre
+                                    farbe: .orange,
+                                    geraete: geraete.filter { $0.kategorie == "Wärmelehre" }
                                 )
                             ) {
                                 FeatureCard(title: "Wärmelehre", icon: "flame.fill", color: .orange)
@@ -79,11 +91,11 @@ struct HomeView: View {
                             NavigationLink(destination:
                                 ThemaDetailView(
                                     titel: "Optik",
-                                    color: .purple,
-                                    category: .optik
+                                    farbe: .purple,
+                                    geraete: geraete.filter { $0.kategorie == "Optik" }
                                 )
                             ) {
-                                FeatureCard(title: "Optik", icon: "triangle.fill", color: .purple)
+                                FeatureCard(title: "Optik", icon: "triangle.fill", color: .cyan)
                             }
                         }
                         .padding(.horizontal, 24)
@@ -91,9 +103,9 @@ struct HomeView: View {
                         
                         // Untere Kacheln
                         VStack(spacing: 16) {
-                            // Experten Geräte - Filter by experten category
+                            // Experten Geräte
                             NavigationLink(destination:
-                                ExpertenListeView(lessons: viewModel.lessons.filter { $0.category == .experten })
+                                ExpertenListeView(geraete: geraete.filter { $0.kategorie == "Experten Geräte" })
                             ) {
                                 SpecialFeatureCard(
                                     title: "Experten Geräte",
@@ -102,39 +114,29 @@ struct HomeView: View {
                                     borderColor: .blue.opacity(0.8)
                                 )
                             }
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 20)
                             
-                            VStack(spacing: 16) {
-                                NavigationLink(destination: GespeicherteListeView(manager: manager)) {
-                                    SpecialFeatureCard(title: "Gespeichert", icon: "bookmark.fill", color: .indigo, borderColor: .indigo.opacity(0.8))
-                                }
-                                
-                                NavigationLink(destination: ExpertenListeView(geraete: geraete.filter { $0.kategorie == "Experten Geräte" }, manager: manager)) {
-                                    SpecialFeatureCard(title: "Experten Geräte", icon: "graduationcap.fill", color: .blue, borderColor: .blue.opacity(0.8))
-                                }
-                                
-                                NavigationLink(destination: WusstestDuSchonView()) {
-                                    SpecialFeatureCard(title: "Wusstest du schon?", icon: "lightbulb.fill", color: .yellow, borderColor: .yellow.opacity(0.8))
-                                }
+                            // Wusstest du schon
+                            NavigationLink(destination: WusstestDuSchonView()) {
+                                SpecialFeatureCard(
+                                    title: "Wusstest du schon?",
+                                    icon: "lightbulb.fill",
+                                    color: .yellow,
+                                    borderColor: .yellow.opacity(0.8)
+                                )
                             }
-                            .padding(.horizontal, 24)
-                            .padding(.bottom, 120)
                         }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 120)
                     }
                 }
             }
             .navigationBarHidden(true)
             .background(Color(.systemBackground))
-            .onAppear {
-                viewModel.fetchLessons()
-            }
         }
     }
 }
 
-// MARK: - 5. Sub-Views & Components
-
+// Standard Feature Card (für Themen)
 struct FeatureCard: View {
     let title: String
     let icon: String
@@ -156,14 +158,15 @@ struct FeatureCard: View {
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, alignment: .center)
             
-            Spacer().frame(width: 56)
+            Spacer()
+                .frame(width: 56)
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
+        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray6)))
     }
 }
 
-// Farbige Rahmen für Experten & Wusstest du schon
+//  farbige Rahmen für Experten & Wusstest du schon)
 struct SpecialFeatureCard: View {
     let title: String
     let icon: String
@@ -186,7 +189,8 @@ struct SpecialFeatureCard: View {
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, alignment: .center)
             
-            Spacer().frame(width: 56)
+            Spacer()
+                .frame(width: 56)
         }
         .padding()
         .background(
@@ -195,26 +199,27 @@ struct SpecialFeatureCard: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(borderColor, lineWidth: 3)
+                .stroke(borderColor, lineWidth: 3) // Farbige Umrandung
         )
     }
 }
 
+// Suchleiste
 struct SuchLeiste: View {
     @Binding var searchText: String
-    let lessons: [Lesson]
+    let geraete: [Geraet]
     
-    var gefilterteLessons: [Lesson] {
+    var gefilterteGeraete: [Geraet] {
         if searchText.isEmpty { return [] }
-        return lessons.filter {
-            $0.title.lowercased().hasPrefix(searchText.lowercased())
-        }
+        return geraete.filter { $0.name.lowercased().hasPrefix(searchText.lowercased()) }
     }
     
     var body: some View {
         VStack(spacing: 8) {
             HStack(spacing: 12) {
-                Image(systemName: "magnifyingglass").foregroundColor(.gray)
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+                
                 TextField("Gerät suchen...", text: $searchText)
                     .font(.system(size: 17))
                     .foregroundColor(.black)
@@ -222,7 +227,8 @@ struct SuchLeiste: View {
                 
                 if !searchText.isEmpty {
                     Button(action: { searchText = "" }) {
-                        Image(systemName: "xmark.circle.fill").foregroundColor(.gray)
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
                     }
                 }
             }
@@ -230,19 +236,17 @@ struct SuchLeiste: View {
             .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGray6)))
             .padding(.horizontal, 24)
             
-            if !gefilterteLessons.isEmpty {
-                ForEach(gefilterteLessons) { lesson in
-                    NavigationLink(destination:
-                        TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))
-                    ) {
+            if !gefilterteGeraete.isEmpty {
+                ForEach(gefilterteGeraete) { geraet in
+                    NavigationLink(destination: GerätDetailView(geraet: geraet)) {
                         HStack {
-                            Image(systemName: lesson.iconName)
+                            Image(systemName: geraet.icon)
                                 .frame(width: 30)
-                            Text(lesson.title)
+                            Text(geraet.name)
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundColor(.black)
                             Spacer()
-                            Text(lesson.category.rawValue)
+                            Text(geraet.kategorie)
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
@@ -257,36 +261,30 @@ struct SuchLeiste: View {
     }
 }
 
-// MARK: - 6. Detail Views
-
+// Thema View
 struct ThemaDetailView: View {
     let titel: String
     let farbe: Color
     let geraete: [Geraet]
-    @ObservedObject var manager: SavedGeraeteManager
     @Environment(\.presentationMode) var presentationMode
-    @StateObject private var viewModel = HomeViewModel()
-    @State private var isLoading = true
-    
-    private var lessonsForCategory: [Lesson] {
-        viewModel.lessons.filter { $0.category == category }
-    }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Header
                 ZStack(alignment: .top) {
                     RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .fill(color)
+                        .fill(farbe)
                         .frame(height: 200)
                         .offset(y: -40)
                     
                     VStack(spacing: 0) {
                         Spacer().frame(height: 25)
+                        
                         ZStack(alignment: .center) {
                             HStack {
-                                Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                                Button(action: {
+                                    presentationMode.wrappedValue.dismiss()
+                                }) {
                                     Image(systemName: "chevron.left")
                                         .font(.title2.bold())
                                         .foregroundColor(.white)
@@ -297,6 +295,7 @@ struct ThemaDetailView: View {
                                 .padding(.leading, 16)
                                 Spacer()
                             }
+                            
                             Text(titel)
                                 .font(.system(size: 28, weight: .bold))
                                 .foregroundColor(.white)
@@ -305,6 +304,7 @@ struct ThemaDetailView: View {
                         }
                         .frame(height: 50)
                         .padding(.top, 60)
+                        
                         Spacer()
                     }
                     .frame(height: 180)
@@ -317,38 +317,91 @@ struct ThemaDetailView: View {
                             GerätKachel(
                                 geraet: geraet,
                                 hintergrundFarbe: farbe.opacity(0.1),
-                                showProgress: true,
-                                manager: manager
+                                showProgress: true
                             )
                         }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 25)
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 25)
                 
                 Spacer(minLength: 50)
             }
         }
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
-        .onAppear {
-            viewModel.fetchLessons()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                isLoading = false
-            }
-        }
     }
 }
 
+// Experten Liste
+struct ExpertenListeView: View {
+    let geraete: [Geraet]
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .fill(Color.blue.opacity(0.8))
+                        .frame(height: 200)
+                        .offset(y: -40)
+                    
+                    VStack(spacing: 0) {
+                        Spacer().frame(height: 25)
+                        
+                        ZStack(alignment: .center) {
+                            HStack {
+                                Button(action: {
+                                    presentationMode.wrappedValue.dismiss()
+                                }) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.title2.bold())
+                                        .foregroundColor(.white)
+                                        .padding(10)
+                                        .background(Color.black.opacity(0.2))
+                                        .clipShape(Circle())
+                                }
+                                .padding(.leading, 16)
+                                Spacer()
+                            }
+                            
+                            Text("Experten Geräte")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        .frame(height: 50)
+                        .padding(.top, 60)
+                        
+                        Spacer()
+                    }
+                    .frame(height: 180)
+                }
+                .frame(height: 160)
+                
+                LazyVStack(spacing: 16) {
+                    ForEach(geraete) { geraet in
+                        NavigationLink(destination: GerätDetailView(geraet: geraet)) {
+                            ExpertenKachel(geraet: geraet)
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 25)
+                
+                Spacer(minLength: 50)
+            }
+        }
+        .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.top)
+    }
+}
 
-
-// MARK: - Kacheln & Detail
-
+// Kacheln
 struct GerätKachel: View {
     let geraet: Geraet
     let hintergrundFarbe: Color
     let showProgress: Bool
-    @ObservedObject var manager: SavedGeraeteManager
     
     var body: some View {
         HStack(spacing: 16) {
@@ -367,18 +420,6 @@ struct GerätKachel: View {
             
             Spacer()
             
-            Button {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                    manager.toggle(geraet)
-                }
-            } label: {
-                Image(systemName: manager.isSaved(geraet) ? "bookmark.fill" : "bookmark")
-                    .font(.title3)
-                    .foregroundColor(manager.isSaved(geraet) ? .blue : .gray)
-                    .scaleEffect(manager.isSaved(geraet) ? 1.2 : 1.0)
-                    .padding(8)
-            }
-            
             if showProgress {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Color.gray.opacity(0.3))
@@ -394,70 +435,8 @@ struct GerätKachel: View {
     }
 }
 
-struct ExpertenListeView: View {
-    let geraete: [Geraet]
-    @ObservedObject var manager: SavedGeraeteManager
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                ZStack(alignment: .top) {
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .fill(Color.blue.opacity(0.8))
-                        .frame(height: 200)
-                        .offset(y: -40)
-                    
-                    VStack(spacing: 0) {
-                        Spacer().frame(height: 25)
-                        ZStack(alignment: .center) {
-                            HStack {
-                                Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                                    Image(systemName: "chevron.left")
-                                        .font(.title2.bold())
-                                        .foregroundColor(.white)
-                                        .padding(10)
-                                        .background(Color.black.opacity(0.2))
-                                        .clipShape(Circle())
-                                }
-                                .padding(.leading, 16)
-                                Spacer()
-                            }
-                            Text("Experten Geräte")
-                                .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                        .frame(height: 50)
-                        .padding(.top, 60)
-                        Spacer()
-                    }
-                    .frame(height: 180)
-                }
-                .frame(height: 160)
-                
-                LazyVStack(spacing: 16) {
-                    ForEach(lessons) { lesson in
-                        NavigationLink(destination:
-                            TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))
-                        ) {
-                            ExpertenLessonRow(lesson: lesson)
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 25)
-                Spacer(minLength: 50)
-            }
-        }
-        .navigationBarHidden(true)
-        .edgesIgnoringSafeArea(.top)
-    }
-}
-
-// Lesson Row for Expert List
-struct ExpertenLessonRow: View {
-    let lesson: Lesson
-    @StateObject private var userVM = UserViewModel.shared
+struct ExpertenKachel: View {
+    let geraet: Geraet
     
     var body: some View {
         HStack(spacing: 16) {
@@ -465,42 +444,121 @@ struct ExpertenLessonRow: View {
                 .fill(Color.blue.opacity(0.1))
                 .frame(width: 50, height: 50)
                 .overlay(
-                    Image(systemName: lesson.iconName)
+                    Image(systemName: geraet.icon)
                         .font(.system(size: 22))
-                        .foregroundColor(.black) // Black icon
+                        .foregroundColor(.blue.opacity(0.8))
                 )
             
-            // Only title, no description
-            Text(lesson.title)
+            Text(geraet.name)
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.black)
-                .frame(maxWidth: .infinity, alignment: .leading)
             
-            Text(geraet.name).font(.system(size: 18, weight: .semibold)).foregroundColor(.black)
             Spacer()
             
-            // Progress bar instead of stars
-            ProgressBar(
-                progress: userVM.getProgress(for: lesson.title),
-                color: .blue
-            )
-            .frame(width: 60, height: 6)
+            HStack(spacing: 2) {
+                ForEach(0..<3) { _ in
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(.blue.opacity(0.8))
+                }
+            }
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 5))
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
+        )
+    }
+}
+
+// Views
+struct GerätDetailView: View {
+    let geraet: Geraet
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title2.bold())
+                        .foregroundColor(.black)
+                        .padding(12)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
+                }
+                Spacer()
+            }
+            .padding(.top, 70)
+            .padding(.leading, 16)
+            
+            Spacer()
+            
+            Image(systemName: geraet.icon)
+                .font(.system(size: 100))
+                .foregroundColor(.blue)
+            
+            Text(geraet.name)
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(.black)
+            
+            Text(geraet.kategorie)
+                .font(.system(size: 20))
+                .foregroundColor(.black.opacity(0.6))
+            
+            Spacer()
+            Spacer()
+        }
+        .navigationBarHidden(true)
     }
 }
 
 struct WusstestDuSchonView: View {
     @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
-        VStack {
-            Button("Zurück") { presentationMode.wrappedValue.dismiss() }.padding()
+        VStack(spacing: 0) {
+            HStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title2.bold())
+                        .foregroundColor(.black)
+                        .padding(12)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
+                }
+                Spacer()
+            }
+            .padding(.top, 70)
+            .padding(.leading, 16)
+            
             Spacer()
-            Text("Wusstest du schon?").font(.title)
+            
+            Text("Wusstest du schon?")
+                .font(.largeTitle.bold())
+                .foregroundColor(.black)
+            
+            Text("Hier kommen interessante Fakten...")
+                .foregroundColor(.black.opacity(0.6))
+                .padding()
+            
             Spacer()
         }
+        .navigationBarHidden(true)
     }
+}
+
+// Daten
+struct Geraet: Identifiable {
+    let id = UUID()
+    let name: String
+    let kategorie: String
+    let icon: String
 }
 
 struct HomeView_Previews: PreviewProvider {

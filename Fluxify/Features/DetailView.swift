@@ -11,7 +11,7 @@ struct DetailView: View {
     var body: some View {
         
         ZStack{
-            ParticleBackground1()
+            ParticleBackground()
             Text("Hello")
                 .font(.system(size: 24))
                 .foregroundStyle(Color.black)
