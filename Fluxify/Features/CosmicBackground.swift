@@ -8,7 +8,7 @@
 //
 
 import SwiftUI
-import Combine
+internal import Combine
 
 
 

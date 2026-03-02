@@ -5,7 +5,7 @@
 //
 
 import SwiftUI
-import Combine
+internal import Combine
 @main
 struct FluxifyApp: App {
     // 1. simple offline user state
