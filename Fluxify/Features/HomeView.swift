@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+<<<<<<< HEAD
 
 
 
@@ -13,6 +14,8 @@ import SwiftUI
 import SwiftUI
 
 
+=======
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
 
 struct HomeView: View {
     @State private var searchText = ""
@@ -267,6 +270,10 @@ struct ThemaDetailView: View {
 <<<<<<< HEAD
     let farbe: Color
     let geraete: [Geraet]
+=======
+    let color: Color
+    let category: LessonCategory
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -321,6 +328,25 @@ struct ThemaDetailView: View {
                                 hintergrundFarbe: farbe.opacity(0.1),
                                 showProgress: true
                             )
+=======
+                // Content
+                if isLoading {
+                    ProgressView("Loading...")
+                        .padding(.top, 50)
+                } else if lessonsForCategory.isEmpty {
+                    Text("No lessons available")
+                        .foregroundColor(.gray)
+                        .padding(.top, 50)
+                } else {
+                    LazyVStack(spacing: 16) {
+                        // Show lessons for this category
+                        ForEach(lessonsForCategory) { lesson in
+                            NavigationLink(destination:
+                                TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))
+                            ) {
+                                LessonRowView(lesson: lesson, color: color)
+                            }
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
                         }
                     }
                 }
@@ -405,18 +431,32 @@ struct GerätKachel: View {
     let geraet: Geraet
     let hintergrundFarbe: Color
     let showProgress: Bool
+=======
+// MARK: - LessonRowView
+struct LessonRowView: View {
+    let lesson: Lesson
+    let color: Color
+    @StateObject private var userVM = UserViewModel.shared
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
     
     var body: some View {
         HStack(spacing: 16) {
             RoundedRectangle(cornerRadius: 12)
+                .fill(color.opacity(0.2))
                 .frame(width: 50, height: 50)
                 .overlay(
+                    Image(systemName: lesson.iconName)
                         .font(.system(size: 22))
+                        .foregroundColor(.black) // Black icon
                 )
             
+            // Only title, no description
+            Text(lesson.title)
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
+<<<<<<< HEAD
             Spacer()
             
             if showProgress {
@@ -424,6 +464,14 @@ struct GerätKachel: View {
                     .fill(Color.gray.opacity(0.3))
                     .frame(width: 60, height: 6)
             }
+=======
+            // Real progress bar starting at 0
+            ProgressBar(
+                progress: userVM.getProgress(for: lesson.title),
+                color: color
+            )
+            .frame(width: 60, height: 6)
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
         }
         .padding()
         .background(
@@ -437,6 +485,105 @@ struct GerätKachel: View {
 <<<<<<< HEAD
 struct ExpertenKachel: View {
     let geraet: Geraet
+=======
+// Progress Bar Component
+struct ProgressBar: View {
+    let progress: Double // 0.0 to 1.0
+    let color: Color
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) { // Leading alignment for left-to-right progress
+                // Background
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                
+                // Progress fill from left
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(color)
+                    .frame(
+                        width: max(0, min(CGFloat(progress) * geometry.size.width, geometry.size.width)),
+                        height: geometry.size.height
+                    )
+                    .animation(.easeInOut(duration: 0.3), value: progress)
+            }
+        }
+    }
+}
+
+
+// Experten Liste - Shows lessons with experten category
+struct ExpertenListeView: View {
+    let lessons: [Lesson]
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .fill(Color.blue.opacity(0.8))
+                        .frame(height: 200)
+                        .offset(y: -40)
+                    
+                    VStack(spacing: 0) {
+                        Spacer().frame(height: 25)
+                        
+                        ZStack(alignment: .center) {
+                            HStack {
+                                Button(action: {
+                                    presentationMode.wrappedValue.dismiss()
+                                }) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.title2.bold())
+                                        .foregroundColor(.white)
+                                        .padding(10)
+                                        .background(Color.black.opacity(0.2))
+                                        .clipShape(Circle())
+                                }
+                                .padding(.leading, 16)
+                                Spacer()
+                            }
+                            
+                            Text("Experten Geräte")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        .frame(height: 50)
+                        .padding(.top, 60)
+                        
+                        Spacer()
+                    }
+                    .frame(height: 180)
+                }
+                .frame(height: 160)
+                
+                LazyVStack(spacing: 16) {
+                    ForEach(lessons) { lesson in
+                        NavigationLink(destination:
+                            TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))
+                        ) {
+                            ExpertenLessonRow(lesson: lesson)
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 25)
+                
+                Spacer(minLength: 50)
+            }
+        }
+        .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.top)
+    }
+}
+
+// Lesson Row for Expert List
+struct ExpertenLessonRow: View {
+    let lesson: Lesson
+    @StateObject private var userVM = UserViewModel.shared
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
     
     var body: some View {
         HStack(spacing: 16) {
@@ -469,6 +616,7 @@ struct ExpertenKachel: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
         )
+<<<<<<< HEAD
     }
 }
 
@@ -513,6 +661,8 @@ struct GerätDetailView: View {
             Spacer()
         }
         .navigationBarHidden(true)
+=======
+>>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
     }
 }
 
