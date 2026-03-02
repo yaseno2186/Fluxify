@@ -264,6 +264,7 @@ struct SuchLeiste: View {
 // Thema View
 struct ThemaDetailView: View {
     let titel: String
+<<<<<<< HEAD
     let farbe: Color
     let geraete: [Geraet]
     @Environment(\.presentationMode) var presentationMode
@@ -311,6 +312,7 @@ struct ThemaDetailView: View {
                 }
                 .frame(height: 160)
                 
+<<<<<<< HEAD
                 LazyVStack(spacing: 16) {
                     ForEach(geraete) { geraet in
                         NavigationLink(destination: GerätDetailView(geraet: geraet)) {
@@ -333,6 +335,7 @@ struct ThemaDetailView: View {
     }
 }
 
+<<<<<<< HEAD
 // Experten Liste
 struct ExpertenListeView: View {
     let geraete: [Geraet]
@@ -406,15 +409,11 @@ struct GerätKachel: View {
     var body: some View {
         HStack(spacing: 16) {
             RoundedRectangle(cornerRadius: 12)
-                .fill(hintergrundFarbe)
                 .frame(width: 50, height: 50)
                 .overlay(
-                    Image(systemName: geraet.icon)
                         .font(.system(size: 22))
-                        .foregroundColor(.black)
                 )
             
-            Text(geraet.name)
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.black)
             
@@ -435,6 +434,7 @@ struct GerätKachel: View {
     }
 }
 
+<<<<<<< HEAD
 struct ExpertenKachel: View {
     let geraet: Geraet
     
