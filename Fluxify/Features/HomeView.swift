@@ -9,6 +9,9 @@ import SwiftUI
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of d0b362e (Update)
 =======
 >>>>>>> parent of d0b362e (Update)
 
@@ -19,12 +22,15 @@ import SwiftUI
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
 =======
 internal import Combine
 import Foundation
 >>>>>>> parent of 9d07bd8 (Revert "Update")
+=======
+>>>>>>> parent of d0b362e (Update)
 =======
 >>>>>>> parent of d0b362e (Update)
 
@@ -283,6 +289,7 @@ struct ThemaDetailView: View {
     let geraete: [Geraet]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     let color: Color
     let category: LessonCategory
@@ -290,6 +297,8 @@ struct ThemaDetailView: View {
 =======
     @ObservedObject var manager: SavedGeraeteManager
 >>>>>>> parent of 9d07bd8 (Revert "Update")
+=======
+>>>>>>> parent of d0b362e (Update)
 =======
 >>>>>>> parent of d0b362e (Update)
     @Environment(\.presentationMode) var presentationMode
@@ -376,6 +385,7 @@ struct ThemaDetailView: View {
         }
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     }
@@ -710,6 +720,115 @@ struct ExpertenLessonRow: View {
 struct ExpertenKachel: View {
     let geraet: Geraet
 >>>>>>> parent of d0b362e (Update)
+=======
+    }
+}
+
+// Experten Liste
+struct ExpertenListeView: View {
+    let geraete: [Geraet]
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .fill(Color.blue.opacity(0.8))
+                        .frame(height: 200)
+                        .offset(y: -40)
+                    
+                    VStack(spacing: 0) {
+                        Spacer().frame(height: 25)
+                        
+                        ZStack(alignment: .center) {
+                            HStack {
+                                Button(action: {
+                                    presentationMode.wrappedValue.dismiss()
+                                }) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.title2.bold())
+                                        .foregroundColor(.white)
+                                        .padding(10)
+                                        .background(Color.black.opacity(0.2))
+                                        .clipShape(Circle())
+                                }
+                                .padding(.leading, 16)
+                                Spacer()
+                            }
+                            
+                            Text("Experten Geräte")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        .frame(height: 50)
+                        .padding(.top, 60)
+                        
+                        Spacer()
+                    }
+                    .frame(height: 180)
+                }
+                .frame(height: 160)
+                
+                LazyVStack(spacing: 16) {
+                    ForEach(geraete) { geraet in
+                        NavigationLink(destination: GerätDetailView(geraet: geraet)) {
+                            ExpertenKachel(geraet: geraet)
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 25)
+                
+                Spacer(minLength: 50)
+            }
+        }
+        .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.top)
+    }
+}
+
+// Kacheln
+struct GerätKachel: View {
+    let geraet: Geraet
+    let hintergrundFarbe: Color
+    let showProgress: Bool
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(hintergrundFarbe)
+                .frame(width: 50, height: 50)
+                .overlay(
+                    Image(systemName: geraet.icon)
+                        .font(.system(size: 22))
+                        .foregroundColor(.black)
+                )
+            
+            Text(geraet.name)
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.black)
+            
+            Spacer()
+            
+            if showProgress {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 60, height: 6)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
+        )
+    }
+}
+
+struct ExpertenKachel: View {
+    let geraet: Geraet
+>>>>>>> parent of d0b362e (Update)
     
     var body: some View {
         HStack(spacing: 16) {
@@ -739,6 +858,9 @@ struct ExpertenKachel: View {
         .padding()
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of d0b362e (Update)
 =======
 >>>>>>> parent of d0b362e (Update)
         .background(
@@ -748,6 +870,9 @@ struct ExpertenKachel: View {
         )
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of d0b362e (Update)
 =======
 >>>>>>> parent of d0b362e (Update)
     }
@@ -795,11 +920,14 @@ struct GerätDetailView: View {
         }
         .navigationBarHidden(true)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 3845d35 (Merge pull request #10 from yaseno2186/Features/Settings)
 =======
         .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 5))
 >>>>>>> parent of 9d07bd8 (Revert "Update")
+=======
+>>>>>>> parent of d0b362e (Update)
 =======
 >>>>>>> parent of d0b362e (Update)
     }
