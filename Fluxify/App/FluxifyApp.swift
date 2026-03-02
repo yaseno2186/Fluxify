@@ -5,7 +5,7 @@
 //
 
 import SwiftUI
-internal import Combine
+import Combine
 @main
 struct FluxifyApp: App {
     // 1. simple offline user state
@@ -16,6 +16,7 @@ struct FluxifyApp: App {
             Group {
                     AnyView(MainTabView())          // ← wrapped
             }
+            .preferredColorScheme(.dark)
         }
     }
 }
@@ -23,12 +24,7 @@ struct FluxifyApp: App {
 
 struct MainTabView: View {
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem { Label("", systemImage: "house") }
-        }
+    }
         
     }
-    
-}
 
