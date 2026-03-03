@@ -196,4 +196,3 @@ struct SoundEffectView: View {
 #Preview {
     SoundEffectView()
 }
-

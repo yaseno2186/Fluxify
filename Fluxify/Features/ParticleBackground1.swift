@@ -85,4 +85,3 @@ struct ParticleBackground1: View {
 #Preview {
     ParticleBackground1()
 }
-

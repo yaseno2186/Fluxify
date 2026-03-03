@@ -193,4 +193,3 @@ struct ContactDetailRow: View {
         }
     }
 }
-

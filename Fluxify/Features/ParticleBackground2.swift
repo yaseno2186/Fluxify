@@ -102,4 +102,3 @@ struct Particle2: Identifiable {
 #Preview {
     ParticleBackground2()
 }
-

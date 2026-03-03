@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		201477A22F1B9FB5009232B7 /* Fluxify */ = {
+		209A89EC2F576102002678D3 /* Fluxify */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Fluxify;
 			sourceTree = "<group>";
@@ -32,8 +32,8 @@
 		2097F2402F1A39F400A3023F = {
 			isa = PBXGroup;
 			children = (
-				201477A22F1B9FB5009232B7 /* Fluxify */,
 				C36C96E12F1BEC7D00FACF0E /* Fluxify.app */,
+				209A89EC2F576102002678D3 /* Fluxify */,
 			);
 			sourceTree = "<group>";
 		};
@@ -53,7 +53,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				201477A22F1B9FB5009232B7 /* Fluxify */,
+				209A89EC2F576102002678D3 /* Fluxify */,
 			);
 			name = Fluxify;
 			packageProductDependencies = (

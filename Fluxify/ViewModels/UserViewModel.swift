@@ -6,7 +6,7 @@
 //
 
 import Foundation
-internal import Combine
+import Combine
 
 class UserViewModel: ObservableObject {
     @Published var user: User?
