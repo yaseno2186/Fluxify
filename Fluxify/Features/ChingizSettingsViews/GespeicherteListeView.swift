@@ -119,3 +119,4 @@ struct GespeicherteListeView: View {
         .edgesIgnoringSafeArea(.top)
     }
 }
+

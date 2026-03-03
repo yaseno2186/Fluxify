@@ -153,3 +153,4 @@ struct AnimatedGradientBackground: View {
 #Preview {
     AnimatedGradientBackground(colors: [.purple, .red, .mint])
 }
+

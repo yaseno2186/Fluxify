@@ -160,3 +160,4 @@ struct SettingRow: View {
         }
     }
 }
+
