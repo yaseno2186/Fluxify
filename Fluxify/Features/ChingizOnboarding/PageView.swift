@@ -131,5 +131,3 @@ struct PageView: View {
         .padding()
     }
 }
-
-
