@@ -9,11 +9,13 @@ import SwiftUI
 import Foundation
 internal import Combine
 
-// MARK: - SavedLessonsManager (included in this file)
+// MARK: - SavedLessonsManager
 class SavedLessonsManager: ObservableObject {
-    @Published var savedLessonIds: Set<String> = []
+    static let shared = SavedLessonsManager()
     
-    private let userDefaultsKey = "savedLessonIds"
+    @Published var savedLessonTitles: Set<String> = []  // Changed from savedLessonIds
+    
+    private let userDefaultsKey = "savedLessonTitles"  // Changed key
     
     init() {
         loadSavedLessons()
@@ -23,42 +25,42 @@ class SavedLessonsManager: ObservableObject {
     private func loadSavedLessons() {
         if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
            let decoded = try? JSONDecoder().decode(Set<String>.self, from: data) {
-            savedLessonIds = decoded
+            savedLessonTitles = decoded  // Changed
         }
     }
     
     // Save to UserDefaults
     private func saveToUserDefaults() {
-        if let encoded = try? JSONEncoder().encode(savedLessonIds) {
+        if let encoded = try? JSONEncoder().encode(savedLessonTitles) {  // Changed
             UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
         }
     }
     
-    // Check if a lesson is saved
+    // Check if a lesson is saved - NOW USES TITLE
     func isSaved(_ lesson: Lesson) -> Bool {
-        savedLessonIds.contains(lesson.id.uuidString)
+        savedLessonTitles.contains(lesson.title)  // Changed from lesson.id.uuidString
     }
     
-    // Toggle save status
+    // Toggle save status - NOW USES TITLE
     func toggle(_ lesson: Lesson) {
-        let id = lesson.id.uuidString
-        if savedLessonIds.contains(id) {
-            savedLessonIds.remove(id)
+        let title = lesson.title  // Changed from id.uuidString
+        if savedLessonTitles.contains(title) {
+            savedLessonTitles.remove(title)
         } else {
-            savedLessonIds.insert(id)
+            savedLessonTitles.insert(title)
         }
         saveToUserDefaults()
     }
     
-    // Add a lesson
+    // Add a lesson - NOW USES TITLE
     func add(_ lesson: Lesson) {
-        savedLessonIds.insert(lesson.id.uuidString)
+        savedLessonTitles.insert(lesson.title)  // Changed
         saveToUserDefaults()
     }
     
-    // Remove a lesson
+    // Remove a lesson - NOW USES TITLE
     func remove(_ lesson: Lesson) {
-        savedLessonIds.remove(lesson.id.uuidString)
+        savedLessonTitles.remove(lesson.title)  // Changed
         saveToUserDefaults()
     }
     
@@ -93,7 +95,41 @@ struct GespeicherteListeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // ... your existing header code ...
+                ZStack(alignment: .top) {
+                                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                                        .fill(Color.indigo)
+                                        .frame(height: 200)
+                                        .offset(y: -40)
+                                    
+                                    VStack(spacing: 0) {
+                                        Spacer().frame(height: 25)
+                                        HStack {
+                                            // Zurück-Button
+                                            Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                                                Image(systemName: "chevron.left")
+                                                    .font(.title2.bold())
+                                                    .foregroundColor(.white)
+                                                    .padding(10)
+                                                    .background(Color.black.opacity(0.2))
+                                                    .clipShape(Circle())
+                                            }
+                                            .padding(.leading, 16)
+                                            Spacer()
+                                        }
+                                        .frame(height: 50)
+                                        .padding(.top, 60)
+                                        Spacer()
+                                    }
+                                    .frame(height: 180)
+                                    .overlay(
+                                        Text("Gespeichert")
+                                            .font(.system(size: 28, weight: .bold))
+                                            .foregroundColor(.white)
+                                            .padding(.top, 40)
+                                    )
+                                }
+                                .frame(height: 160)
+
                 
                 // MARK: - Inhalts Bereich
                 if savedLessons.isEmpty {

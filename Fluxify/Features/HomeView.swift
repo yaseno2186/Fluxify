@@ -11,8 +11,7 @@ internal import Combine
 struct HomeView: View {
     @State private var searchText = ""
     @StateObject private var viewModel = HomeViewModel()
-    @StateObject private var savedManager = SavedLessonsManager()
-    
+    @StateObject private var savedManager = SavedLessonsManager.shared
     var gefilterteLessons: [Lesson] {
         if searchText.isEmpty { return [] }
         return viewModel.lessons.filter {
@@ -96,7 +95,7 @@ struct HomeView: View {
                             
                             // Experten Geräte - Filter by experten category
                             NavigationLink(destination:
-                                            ExpertenListeView(lessons: viewModel.lessons.filter { $0.category == .experten })
+                                ExpertenListeView(lessons: viewModel.lessons.filter { $0.category == .experten })
                             ) {
                                 SpecialFeatureCard(
                                     title: "Experten Geräte",
@@ -271,7 +270,6 @@ struct ThemaDetailView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var isLoading = true
     
-    // Add this to receive the manager from parent
     @EnvironmentObject var savedManager: SavedLessonsManager
     
     private var lessonsForCategory: [Lesson] {
@@ -395,8 +393,12 @@ struct LessonRowViewWithAction: View {
                 )
                 .frame(width: 60, height: 6)
                 
-                // Bookmark Button
+                // Bookmark Button with haptic feedback
                 Button(action: {
+                    // Haptic feedback
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                         savedManager.toggle(lesson)
                     }
