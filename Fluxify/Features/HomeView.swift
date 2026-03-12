@@ -25,7 +25,7 @@ struct HomeView: View {
                 VStack(spacing: 15) {
                     
                     // Header
-                    Text("Home")
+                    Text("Lerneinheiten")
                         .font(.system(size: 38, weight: .bold, design: .rounded))
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -132,7 +132,6 @@ struct HomeView: View {
     }
 }
 
-// ... rest of your code stays the same ...
 // MARK: - Supporting Views
 
 struct FeatureCard: View {
@@ -363,16 +362,20 @@ struct LessonRowViewWithAction: View {
     @StateObject private var userVM = UserViewModel.shared
     @EnvironmentObject var savedManager: SavedLessonsManager
     
+    // Create the task view model ONCE and preserve it
+    @StateObject private var taskViewModel: TasksViewModel
+    
+    init(lesson: Lesson, color: Color) {
+        self.lesson = lesson
+        self.color = color
+        // Initialize the StateObject
+        _taskViewModel = StateObject(wrappedValue: TasksViewModel(lessonTitle: lesson.title))
+    }
+    
     var body: some View {
-        ZStack {
-            // NavigationLink as overlay (invisible)
-            NavigationLink(destination: TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))) {
-                EmptyView()
-            }
-            .opacity(0)
-            
-            // Visible content
+        NavigationLink(destination: TaskDetailView(viewModel: taskViewModel)) {
             HStack(spacing: 16) {
+                // ... rest of your code stays the same
                 RoundedRectangle(cornerRadius: 12)
                     .fill(color.opacity(0.2))
                     .frame(width: 50, height: 50)
@@ -395,10 +398,8 @@ struct LessonRowViewWithAction: View {
                 
                 // Bookmark Button with haptic feedback
                 Button(action: {
-                    // Haptic feedback
                     let impact = UIImpactFeedbackGenerator(style: .medium)
                     impact.impactOccurred()
-                    
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                         savedManager.toggle(lesson)
                     }
@@ -409,6 +410,7 @@ struct LessonRowViewWithAction: View {
                         .scaleEffect(savedManager.isSaved(lesson) ? 1.2 : 1.0)
                         .padding(8)
                 }
+                .buttonStyle(.plain)
             }
             .padding()
             .background(
@@ -417,6 +419,7 @@ struct LessonRowViewWithAction: View {
                     .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
             )
         }
+        .buttonStyle(.plain)
     }
 }
 struct WusstestDuSchonView: View {
