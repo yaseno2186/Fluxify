@@ -13,9 +13,22 @@ struct TaskDetailView: View {
         ZStack {
             Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all)
             
-            if let task = viewModel.currentTask {
+           
+            if viewModel.isGameOver {
+                GameOverView(
+                    score: viewModel.score,
+                    totalQuestions: viewModel.tasks.count,
+                    onRetry: {
+                        viewModel.startTasks()
+                    },
+                    onHome: {
+                        viewModel.isGameOver = false
+                        dismiss()
+                    }
+                )
+            } else if let task = viewModel.currentTask {
                 VStack(spacing: 0) {
-                    // Top bar
+                    // Top bar with progress and hearts
                     HStack {
                         // Progress bar
                         VStack(spacing: 8) {
@@ -44,18 +57,20 @@ struct TaskDetailView: View {
                         
                         Spacer()
                         
+                        // Hearts display - gray out if low
                         HStack(spacing: 4) {
-                            Image(systemName: "heart.fill")
+                            Image(systemName: viewModel.lives > 0 ? "heart.fill" : "heart.slash")
                                 .font(.title3)
-                                .foregroundColor(.red)
+                                .foregroundColor(viewModel.lives > 0 ? .red : .gray)
                             Text("\(viewModel.lives)")
                                 .font(.headline)
                                 .fontWeight(.bold)
+                                .foregroundColor(viewModel.lives > 0 ? .primary : .red)
                         }
                     }
                     .padding()
 
-                    // Main content card - fills available space
+                    // Main content card
                     ScrollView {
                         VStack(spacing: 20) {
                             Text(task.question)
@@ -70,7 +85,7 @@ struct TaskDetailView: View {
                                 MultipleChoiceContent(task: task, viewModel: viewModel)
                             case .dragAndDrop:
                                 DragAndDropContent(task: task, viewModel: viewModel)
-                                    .frame(minHeight: 400) // Ensure minimum height
+                                    .frame(minHeight: 400)
                             case .slider:
                                 SliderContent(task: task, viewModel: viewModel)
                             case .sequence:
@@ -80,7 +95,7 @@ struct TaskDetailView: View {
                             }
                         }
                         .padding()
-                        .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.6) // Minimum height
+                        .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.6)
                     }
                     .background(Color(UIColor.secondarySystemGroupedBackground))
                     .cornerRadius(20)
@@ -88,7 +103,7 @@ struct TaskDetailView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 10)
 
-                    // Bottom buttons - pushed to bottom
+                    // Bottom buttons area
                     VStack(spacing: 0) {
                         if viewModel.isAnswerChecked {
                             VStack(spacing: 10) {
@@ -99,19 +114,29 @@ struct TaskDetailView: View {
                                         .padding(.horizontal)
                                 }
 
-                                Button(action: {
-                                    viewModel.nextTask()
-                                }) {
-                                    Text("Weiter")
+                                
+                                if !viewModel.isGameOver {
+                                    Button(action: {
+                                        viewModel.nextTask()
+                                    }) {
+                                        Text("Weiter")
+                                            .font(.headline)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(viewModel.isAnswerCorrect == true ? Color.green : Color.red)
+                                            .cornerRadius(12)
+                                    }
+                                    .padding()
+                                } else {
+                                    // Show game over message in button area
+                                    Text("Keine Herzen mehr!")
                                         .font(.headline)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
+                                        .foregroundColor(.red)
                                         .padding()
-                                        .background(viewModel.isAnswerCorrect == true ? Color.green : Color.red)
-                                        .cornerRadius(12)
+                                        .transition(.opacity)
                                 }
-                                .padding()
                             }
                         } else {
                             Button(action: {
@@ -139,7 +164,7 @@ struct TaskDetailView: View {
                     }
             }
         }
-       
+        // Completion sheet (only for successful completion, not game over)
         .sheet(isPresented: $viewModel.taskCompleted) {
             TaskCompletionView(
                 score: viewModel.score,
@@ -153,7 +178,7 @@ struct TaskDetailView: View {
                 onRetry: {
                     viewModel.startTasks()
                 },
-                onHome: {  // NEW: Home button action
+                onHome: {
                     viewModel.taskCompleted = false
                     dismiss()
                 }

@@ -17,7 +17,7 @@ class TasksViewModel: ObservableObject {
 
     init(lessonTitle: String = "") {
         self.lessonTitle = lessonTitle
-        fetchTasks() // Fetch tasks on init
+        fetchTasks()
     }
 
     func fetchTasks() {
@@ -67,18 +67,20 @@ class TasksViewModel: ObservableObject {
         if isCorrect {
             score += 1
         } else {
-            // Only decrease lives if above 0, and check for game over
-            if lives > 0 {
-                lives -= 1
-                if lives <= 0 {
-                    isGameOver = true
-                }
+            lives -= 1
+            if lives <= 0 {
+                lives = 0  // Prevent negative
+                isGameOver = true  // Set game over state
             }
         }
     }
     
     
     func nextTask() {
+        if isGameOver {
+            return
+        }
+        
         if currentTaskIndex < tasks.count - 1 {
             currentTaskIndex += 1
             if currentTaskIndex < tasks.count {
