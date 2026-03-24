@@ -182,10 +182,10 @@ class BackendService {
                     options: nil,
                     correctAnswer: nil,
                     dragItems: [
-                        DragItem(text: "Kompressor", correctZoneId: "bottom", imageName: "bolt.fill"),        // or "gearshape.fill"
-                        DragItem(text: "Kondensator", correctZoneId: "left", imageName: "flame.fill"),        // or "radiator"
-                        DragItem(text: "Expansionsventil", correctZoneId: "top", imageName: "arrow.down.circle"), // or "arrow.down.circle"
-                        DragItem(text: "Verdampfer", correctZoneId: "right", imageName: "snowflake")    // or "wind"
+                        DragItem(text: "Kompressor", correctZoneId: "bottom", imageName: "bolt.fill"),
+                        DragItem(text: "Kondensator", correctZoneId: "left", imageName: "flame.fill"),
+                        DragItem(text: "Expansionsventil", correctZoneId: "right", imageName: "arrow.down.circle"),
+                        DragItem(text: "Verdampfer", correctZoneId: "top", imageName: "snowflake")
                     ],
                     dropZones: [
                         DropZone(id: "bottom", label: "Unten", imageName: nil, position: CGPoint(x: 0.5, y: 0.9)),   // bottom center
@@ -209,7 +209,7 @@ class BackendService {
                     dragItems: nil,
                     dropZones: nil,
                     sliderConfig: SliderConfig(
-                        minValue: -25,
+                        minValue: -20,
                         maxValue: -10,
                         correctValue: -18,
                         tolerance: 2,
