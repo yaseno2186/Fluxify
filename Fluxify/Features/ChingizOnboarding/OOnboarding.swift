@@ -12,7 +12,6 @@ struct Onboarding: View {
     
     @AppStorage("shouldShowOnboarding") var shouldShowOnboarding: Bool = true
     @AppStorage("userName") var userName: String = ""
-    @AppStorage("userAge") var userAge: String = ""
     @AppStorage("userEmail") var userEmail: String = ""
     
     // Initialisiere den Manager hier
@@ -38,8 +37,6 @@ struct Onboarding: View {
             // Tab 2: Settings
             NavigationStack {
                 SettingsView1(
-                    userName: userName,
-                    userEmail: userEmail,
                     shouldShowOnboarding: $shouldShowOnboarding
                 )
             }
@@ -57,7 +54,6 @@ struct Onboarding: View {
             OnboardingView(
                 shouldShowOnboarding: $shouldShowOnboarding,
                 userName: $userName,
-                userAge: $userAge,
                 userEmail: $userEmail
             )
         }

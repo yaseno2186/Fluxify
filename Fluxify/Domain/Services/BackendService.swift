@@ -6,6 +6,8 @@ class BackendService {
 
     private init() {}
 
+    // Add this function inside BackendService, alongside the existing functions:
+
     func login(email: String, password: String, completion: @escaping (User?) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             if email == "test@example.com" && password == "password" {
@@ -16,6 +18,15 @@ class BackendService {
             }
         }
     }
+     
+    
+    func updateUsername(_ newUsername: String, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Simulate a successful update
+            completion(true)
+        }
+    }
+     
 
     func fetchLessons(completion: @escaping ([Lesson]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

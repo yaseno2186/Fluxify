@@ -24,12 +24,10 @@ struct PageView: View {
     
     @Binding var shouldShowOnboarding: Bool
     @Binding var userName: String
-    @Binding var userAge: String
     @Binding var userEmail: String
     
-    // Lokale Fehler-States für Validierung
+    // Lokaler Fehler-State für Validierung
     @State private var nameError: String?
-    @State private var ageError: String?
     
     var body: some View {
         VStack(spacing: 20) {
@@ -61,28 +59,6 @@ struct PageView: View {
                                 }
                             }
                         if let error = nameError {
-                            Text(error).font(.caption).foregroundColor(.red).padding(.leading, 5)
-                        }
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        TextField("Dein Alter", text: $userAge)
-                            .keyboardType(.numberPad)
-                            .padding()
-                            .background(Color.white.opacity(0.9))
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(ageError != nil ? Color.red : Color.clear, lineWidth: 2)
-                            )
-                            .onChange(of: userAge) { _, newValue in
-                                if !newValue.allSatisfy({ $0.isNumber }) {
-                                    ageError = "Das Alter darf nur Zahlen enthalten."
-                                } else {
-                                    ageError = nil
-                                }
-                            }
-                        if let error = ageError {
                             Text(error).font(.caption).foregroundColor(.red).padding(.leading, 5)
                         }
                     }

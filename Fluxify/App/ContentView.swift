@@ -11,17 +11,13 @@ struct ContentView: View {
     
     @AppStorage("shouldShowOnboarding") var shouldShowOnboarding: Bool = true
     @AppStorage("userName") var userName: String = ""
-    @AppStorage("userAge") var userAge: String = ""
     @AppStorage("userEmail") var userEmail: String = ""
     var body: some View {
         
         ZStack {
+
             
-          
-            ParticleBackground1()
-                .ignoresSafeArea()
-            
-            SettingsView1(userName: userName, userEmail: userEmail, shouldShowOnboarding: $shouldShowOnboarding)
+            SettingsView1(shouldShowOnboarding: $shouldShowOnboarding)
             
             
             
