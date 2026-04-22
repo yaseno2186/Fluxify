@@ -14,7 +14,7 @@ struct FluxifyApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                    AnyView(MainTabView())          // ← wrapped
+                Onboarding()
             }
         }
     }

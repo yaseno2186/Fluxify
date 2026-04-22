@@ -18,7 +18,7 @@ struct Onboarding: View {
     // Initialisiere den Manager hier
    
     
-    private enum AppTab: Hashable { case home, settings }
+    private enum AppTab: Hashable { case home, funFacts, settings }
     @State private var selectedTab: AppTab = .home
     
     var body: some View {
@@ -34,8 +34,15 @@ struct Onboarding: View {
             .tabItem {
                 Label("Home", systemImage: "house.fill")
             }
-            
-            // Tab 2: Settings
+            // Tab 2: Fun Facts
+            NavigationStack {
+                FunFactsView()
+            }
+            .tag(AppTab.funFacts)
+            .tabItem {
+                Label("Fakten", systemImage: "lightbulb.fill")
+            }
+            // Tab 3: Settings
             NavigationStack {
                 SettingsView1(
                     userName: userName,
