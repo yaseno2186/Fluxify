@@ -55,6 +55,7 @@ struct Onboarding: View {
                 Label("Einstellungen", systemImage: "gear")
             }
         }
+        .environmentObject(SavedLessonsManager.shared)  
         // Das EnvironmentObject wird hier an den gesamten TabView-Baum weitergegeben
        
         

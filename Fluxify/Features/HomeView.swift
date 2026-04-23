@@ -269,9 +269,7 @@ struct ThemaDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = HomeViewModel()
     @State private var isLoading = true
-    
-    @EnvironmentObject var savedManager: SavedLessonsManager
-    
+        
     private var lessonsForCategory: [Lesson] {
         viewModel.lessons.filter { $0.category == category }
     }
@@ -331,12 +329,11 @@ struct ThemaDetailView: View {
                 } else {
                     LazyVStack(spacing: 16) {
                         ForEach(lessonsForCategory) { lesson in
-                            // Remove NavigationLink wrapper, use button action instead
-                            LessonRowViewWithAction(
-                                lesson: lesson,
-                                color: color
-                            )
-                        }
+                                NavigationLink(destination: TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))) {
+                                    LessonRowView(lesson: lesson, color: color)
+                                }
+                                .buttonStyle(.plain) 
+                            }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 25)
@@ -357,68 +354,58 @@ struct ThemaDetailView: View {
 }
 
 // NEW: Row with tap action instead of NavigationLink wrapper
-struct LessonRowViewWithAction: View {
+struct LessonRowView: View {
     let lesson: Lesson
     let color: Color
     @StateObject private var userVM = UserViewModel.shared
-    @EnvironmentObject var savedManager: SavedLessonsManager
+    @StateObject private var savedManager = SavedLessonsManager.shared
     
     var body: some View {
-        ZStack {
-            // NavigationLink as overlay (invisible)
-            NavigationLink(destination: TaskDetailView(viewModel: TasksViewModel(lessonTitle: lesson.title))) {
-                EmptyView()
-            }
-            .opacity(0)
-            
-            // Visible content
-            HStack(spacing: 16) {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(color.opacity(0.2))
-                    .frame(width: 50, height: 50)
-                    .overlay(
-                        Image(systemName: lesson.iconName)
-                            .font(.system(size: 22))
-                            .foregroundColor(.black)
-                    )
-                
-                Text(lesson.title)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                ProgressBar(
-                    progress: userVM.getProgress(for: lesson.title),
-                    color: color
+        HStack(spacing: 16) {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(color.opacity(0.2))
+                .frame(width: 50, height: 50)
+                .overlay(
+                    Image(systemName: lesson.iconName)
+                        .font(.system(size: 22))
+                        .foregroundColor(.black)
                 )
-                .frame(width: 60, height: 6)
-                
-                // Bookmark Button with haptic feedback
-                Button(action: {
-                    // Haptic feedback
-                    let impact = UIImpactFeedbackGenerator(style: .medium)
-                    impact.impactOccurred()
-                    
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                        savedManager.toggle(lesson)
-                    }
-                }) {
-                    Image(systemName: savedManager.isSaved(lesson) ? "bookmark.fill" : "bookmark")
-                        .font(.title3)
-                        .foregroundColor(savedManager.isSaved(lesson) ? .blue : .gray)
-                        .scaleEffect(savedManager.isSaved(lesson) ? 1.2 : 1.0)
-                        .padding(8)
-                }
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemBackground))
-                    .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
+            
+            Text(lesson.title)
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            ProgressBar(
+                progress: userVM.getProgress(for: lesson.title),
+                color: color
             )
+            .frame(width: 60, height: 6)
+            
+            // Bookmark button works independently inside the NavigationLink
+            Button(action: {
+                let impact = UIImpactFeedbackGenerator(style: .medium)
+                impact.impactOccurred()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    savedManager.toggle(lesson)
+                }
+            }) {
+                Image(systemName: savedManager.isSaved(lesson) ? "bookmark.fill" : "bookmark")
+                    .font(.title3)
+                    .foregroundColor(savedManager.isSaved(lesson) ? .blue : .gray)
+                    .scaleEffect(savedManager.isSaved(lesson) ? 1.2 : 1.0)
+                    .padding(8)
+            }
         }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.08), radius: 5, x: 0, y: 2)
+        )
     }
 }
+
 struct WusstestDuSchonView: View {
     @Environment(\.presentationMode) var presentationMode
     
