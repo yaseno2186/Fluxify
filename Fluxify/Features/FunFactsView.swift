@@ -17,7 +17,7 @@ struct FunFactsView: View {
                 "Eine halbe Traube in der Mikrowelle erzeugt kurzzeitig echtes Plasma , Feuer aus Licht!",
                 "Wasser kann sich überhitzen: Es sieht ruhig aus, kocht aber nicht. Rührst du um, explodiert es dir ins Gesicht.",
                 "Ein Ei in der Schale wird zur Handgranate: Der Dampf findet kein Loch und sprengt die Schale mit lautem Knall.",
-                "Metallbeschichtete Tassen (goldener Rand) funkeln und können Brände auslösen , auch wenn es keine Gabel ist.",
+                "Metallbeschichtete Objekte funkeln und können Brände auslösen , auch wenn es keine Gabel ist.",
                 "Die Mikrowelle hat heiße und kalte Stellen: Ein Marshmallow-Test zeigt dir genau, wo die stehenden Wellen sind."
             ]
         ),

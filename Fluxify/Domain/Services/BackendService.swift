@@ -50,112 +50,64 @@ class BackendService {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
         
             // Microwave tasks - Updated with TaskType
-                  let microwaveTasks = [
-                      Task(
-                          type: .multipleChoice,
-                          question: "Wie heizt eine Mikrowelle?",
-                          imageName: ["microwave_waves"],
-                          options: ["Mit Wärme", "Mit Mikrowellen", "Mit Gas", "Mit Elektrizität"],
-                          correctAnswer: "Mit Mikrowellen",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Mikrowellen sind elektromagnetische Wellen. Sie lassen Wassermoleküle im Essen schnell hin- und herbewegen. Durch diese Bewegung entsteht Wärme.",
-                          tip: "Tipp: Je mehr Wasser im Essen ist, desto schneller wird es heiß."
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Was passiert mit Metall in der Mikrowelle?",
-                          imageName: ["metal_sparks"],
-                          options: ["Es schmilzt", "Es funkelt", "Es wird heiß", "Nichts"],
-                          correctAnswer: "Es funkelt",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Metall reflektiert Mikrowellen. An spitzen Kanten entstehen starke elektrische Felder, die Funken erzeugen. Das kann das Gerät beschädigen.",
-                          tip: "⚠️ Achtung: Nie Metall in die Mikrowelle geben!"
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Warum dreht sich der Teller?",
-                          imageName: ["turntable", "hotspots"],
-                          options: ["Zum Mischen", "Für gleichmäßige Hitze", "Zum Abkühlen", "Nur Dekoration"],
-                          correctAnswer: "Für gleichmäßige Hitze",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Mikrowellen bilden stehende Wellen. Es gibt heiße und kalte Stellen. Der Drehteller bewegt das Essen durch alle Zonen.",
-                          tip: "Tipp: Essen in der Mitte platzieren für beste Ergebnisse."
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Warum wird das Essen außen heißer?",
-                          imageName: ["penetration_depth"],
-                          options: ["Zu wenig Leistung", "Mikrowellen dringen nur 2-3 cm ein", "Der Teller dreht zu langsam", "Wärme steigt nach oben"],
-                          correctAnswer: "Mikrowellen dringen nur 2-3 cm ein",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Die Wellen werden im äußeren Bereich des Essens absorbiert. Das Innere erwärmt sich nur durch Wärmeleitung von außen.",
-                          tip: "Tipp: Große Stücke niedriger Leistung und länger erwärmen."
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Was ist ein Magnetron?",
-                          imageName: ["magnetron"],
-                          options: ["Ein Motor", "Die Mikrowellen-Quelle", "Ein Ventilator", "Ein Sensor"],
-                          correctAnswer: "Die Mikrowellen-Quelle",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Das Magnetron ist eine Vakuumröhre. Sie erzeugt die 2,45 GHz Mikrowellen durch schnell bewegte Elektronen.",
-                          tip: "Tipp: Das Herzstück jeder Mikrowelle."
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Warum platzen Eier in der Mikrowelle?",
-                          imageName: ["egg_explosion"],
-                          options: ["Zu schnell erhitzt", "Dampfdruck in der Schale", "Chemische Reaktion", "Zu viel Salz"],
-                          correctAnswer: "Dampfdruck in der Schale",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Das Wasser im Ei verdampft. Die Schale hält den Druck zurück. Bei zu hohem Druck explodiert das Ei.",
-                          tip: "⚠️ Achtung: Eier immer aufschlagen oder anstechen!"
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Welche Frequenz nutzt die Mikrowelle?",
-                          imageName: ["frequency_wave"],
-                          options: ["50 Hz", "2,45 GHz", "100 MHz", "1000 Hz"],
-                          correctAnswer: "2,45 GHz",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "2,45 GHz bedeutet 2,45 Milliarden Schwingungen pro Sekunde. Diese Frequenz wird besonders gut von Wasser absorbiert.",
-                          tip: "Tipp: Dieselbe Frequenz nutzt auch WLAN."
-                      ),
-                      Task(
-                          type: .multipleChoice,
-                          question: "Warum bleibt der Teller kalt?",
-                          imageName: ["glass_plate"],
-                          options: ["Er ist zu dick", "Glas absorbiert keine Mikrowellen", "Er dreht sich zu schnell", "Er ist isoliert"],
-                          correctAnswer: "Glas absorbiert keine Mikrowellen",
-                          dragItems: nil,
-                          dropZones: nil,
-                          sliderConfig: nil,
-                          sequenceItems: nil,
-                          reasoning: "Keramik und Glas haben keine Wassermoleküle. Sie lassen Mikrowellen durch und werden nicht heiß.",
-                          tip: "Tipp: Deshalb nutzen wir Glas und Porzellan in der Mikrowelle."
-                      )
-                  ]
+            let microwaveTasks = [
+                            // Task 1: Sequence - Order the heating process
+                            Task(
+                                type: .sequence,
+                                question: "Ordne die Schritte: Wie heizt eine Mikrowelle?",
+                                imageName: ["microwave_waves"],
+                                options: nil,
+                                correctAnswer: nil,
+                                dragItems: nil,
+                                dropZones: nil,
+                                sliderConfig: nil,
+                                sequenceItems: [
+                                    SequenceItem(text: "Magnetron erzeugt Mikrowellen", correctPosition: 1, imageName: "bolt.fill"),
+                                    SequenceItem(text: "Wellen dringen ins Essen ein", correctPosition: 2, imageName: "arrow.down"),
+                                    SequenceItem(text: "Wassermoleküle vibrieren", correctPosition: 3, imageName: "drop.fill"),
+                                    SequenceItem(text: "Reibung erzeugt Wärme", correctPosition: 4, imageName: "flame.fill")
+                                ],
+                                reasoning: "Das Magnetron erzeugt Mikrowellen → Die Wellen dringen ins Essen ein → Wassermoleküle beginnen zu vibrieren → Durch die Reibung entsteht Wärme.",
+                                tip: "Tipp: Denke an den Weg von innen nach außen!"
+                            ),
+                            
+                            // Task 2: MultipleChoice - Metal danger (safety warning)
+                            Task(
+                                type: .multipleChoice,
+                                question: "Was passiert mit Metall in der Mikrowelle?",
+                                imageName: ["fork.knife"],
+                                options: ["Es schmilzt", "Es funkelt", "Es wird heiß", "Nichts"],
+                                correctAnswer: "Es funkelt",
+                                dragItems: nil,
+                                dropZones: nil,
+                                sliderConfig: nil,
+                                sequenceItems: nil,
+                                reasoning: "Metall reflektiert Mikrowellen. An spitzen Kanten entstehen starke elektrische Felder, die Funken erzeugen. Das kann das Gerät beschädigen oder sogar einen Brand auslösen.",
+                                tip: "⚠️ Achtung: Nie Metall in die Mikrowelle geben!"
+                            ),
+                            
+                            // Task 3: Slider - Set the microwave frequency
+                            Task(
+                                type: .slider,
+                                question: "Stelle die Frequenz der Mikrowelle ein!",
+                                imageName: ["frequency_wave"],
+                                options: nil,
+                                correctAnswer: nil,
+                                dragItems: nil,
+                                dropZones: nil,
+                                sliderConfig: SliderConfig(
+                                    minValue: 0.5,
+                                    maxValue: 9.0,
+                                    correctValue: 2.45,
+                                    tolerance: 0.15,
+                                    unit: " GHz",
+                                    step: 0.05
+                                ),
+                                sequenceItems: nil,
+                                reasoning: "Die Mikrowelle arbeitet mit 2,45 GHz – exakt dieselbe Frequenz wie WLAN. Diese Frequenz wird besonders gut von Wassermolekülen absorbiert.",
+                                tip: "💡 Tipp: 2,45 GHz bedeutet 2,45 Milliarden Schwingungen pro Sekunde!"
+                            )
+                        ]
                   
             // Interactive refrigerator tasks
             let refrigeratorTasks = [
