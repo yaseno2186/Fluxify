@@ -139,6 +139,8 @@ struct TaskDetailView: View {
                     }
             }
         }
+        .toolbar(.hidden, for: .tabBar)
+
        
         .sheet(isPresented: $viewModel.taskCompleted) {
             TaskCompletionView(
