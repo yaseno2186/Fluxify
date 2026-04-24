@@ -1,12 +1,5 @@
 //  FluxifyApp.swift
 //  Fluxify
-//
-//  Starter scaffold – matches Figma screens
-//
-//  FluxifyApp.swift
-//  Fluxify
-//
-//
 
 import SwiftUI
 internal import Combine

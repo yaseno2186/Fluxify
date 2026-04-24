@@ -131,10 +131,7 @@ struct HomeView: View {
         .environmentObject(viewModel)
     }
 }
-
-// ... rest of your code stays the same ...
 // MARK: - Supporting Views
-
 struct FeatureCard: View {
     let title: String
     let icon: String

@@ -4,7 +4,6 @@
 //
 //  Created by Yass on 22.04.26.
 //
-
 import SwiftUI
 
 struct FunFactsView: View {
@@ -15,11 +14,11 @@ struct FunFactsView: View {
             icon: "microwave.fill",
             color: .orange,
             facts: [
-                "Die Mikrowelle nutzt exakt die gleiche Frequenz wie WLAN: 2,45 GHz!",
-                "Das Magnetron ist eine Vakuumröhre und das Herzstück jeder Mikrowelle.",
-                "Mikrowellen dringen nur 2–3 cm tief ins Essen ein – der Rest wird durch Wärmeleitung erwärmt.",
-                "Der Drehteller sorgt für gleichmäßige Hitze, weil stehende Wellen heiße und kalte Stellen erzeugen.",
-                "Eier platzen, weil sich Wasserdampf in der Schale staut – immer anstechen!"
+                "Eine halbe Traube in der Mikrowelle erzeugt kurzzeitig echtes Plasma , Feuer aus Licht!",
+                "Wasser kann sich überhitzen: Es sieht ruhig aus, kocht aber nicht. Rührst du um, explodiert es dir ins Gesicht.",
+                "Ein Ei in der Schale wird zur Handgranate: Der Dampf findet kein Loch und sprengt die Schale mit lautem Knall.",
+                "Metallbeschichtete Tassen (goldener Rand) funkeln und können Brände auslösen , auch wenn es keine Gabel ist.",
+                "Die Mikrowelle hat heiße und kalte Stellen: Ein Marshmallow-Test zeigt dir genau, wo die stehenden Wellen sind."
             ]
         ),
         DeviceFact(
@@ -27,11 +26,11 @@ struct FunFactsView: View {
             icon: "refrigerator",
             color: .mint,
             facts: [
-                "Ein Kühlschrank ist eigentlich eine Wärmepumpe: Er pumpt Wärme aus dem Inneren nach außen.",
-                "Der Kompressor verdichtet das Kältemittel – dadurch wird es heiß.",
-                "Im Verdampfer wird das Kältemittel wieder kalt und nimmt Wärme aus dem Kühlschrank auf.",
-                "-18°C ist der optimale Standard für Gefrierschränke.",
-                "Jeder Grad über -18°C verbraucht ca. 6% mehr Energie!"
+                "Tomaten im Kühlschrank verlieren ihr Aroma für immer , der Kälteschock zerstört ihre Aromastoffe.",
+                "Heißes Essen direkt hineinstellen ist sicherer als abkühlen lassen: Bakterien lieben Raumtemperatur.",
+                "Die Tür ist der wärmste Ort: Milch dort hält deutlich kürzer als hinten im Regal.",
+                "Gefrierbrand ist keine Kälte, sondern Austrocknung: Das Eis verdampft direkt ins Trockene.",
+                "Ein voller Gefrierschrank verbraucht weniger Strom als ein leerer: Die gefrorene Masse speichert Kälte als Puffer."
             ]
         ),
         DeviceFact(
@@ -39,11 +38,11 @@ struct FunFactsView: View {
             icon: "heater.vertical",
             color: .red,
             facts: [
-                "Induktionsherde erzeugen ein hochfrequentes magnetisches Wechselfeld.",
-                "Das Topfmaterial muss ferromagnetisch sein – deshalb funktioniert Aluminium nicht.",
-                "Die Platte selbst wird nicht heiß, nur der Topf!",
-                "Wirbelströme im Topfboden erzeugen die Hitze durch elektrischen Widerstand.",
-                "Ein Magnet-Test zeigt sofort, ob ein Topf induktionsgeeignet ist."
+                "Ein leerer Topf auf Induktion kann so heiß werden, dass er zu glühen beginnt und das Glasfeld beschädigt.",
+                "Ein Löffel, der am Topfrand lehnt, kann durch das Streufeld heiß werden , ohne dass du es merkst.",
+                "Kreditkarten mit Magnetstreifen direkt auf der Platte werden unwiderruflich gelöscht.",
+                "Dein Smartphone auf der Platte kann durch die Magnetfelder dauerhaften Schaden nehmen.",
+                "Menschen mit Herzschrittmacher sollten sich nicht direkt über aktive Induktionsplatten beugen."
             ]
         ),
         DeviceFact(
@@ -51,45 +50,45 @@ struct FunFactsView: View {
             icon: "globe.americas",
             color: .blue,
             facts: [
-                "GPS steht für Global Positioning System und wurde 1973 von der US-Regierung entwickelt.",
-                "Mindestens 4 Satelliten werden für eine 3D-Position benötigt.",
-                "Das GPS-System besteht aus 24–32 Satelliten in der Umlaufbahn.",
-                "GPS-Satelliten senden auf zwei Frequenzen, um atmosphärische Störungen zu korrigieren.",
-                "Deine Uhr wird durch GPS präziser als durch Funk gestellt!"
+                "Dein Handy ortet dich im Flugmodus trotzdem: GPS-Satelliten brauchen kein Mobilfunknetz.",
+                "Stahlbrücken oder Parkhäuser können die GPS-Uhrzeit um Millisekunden verfälschen , genug, um die Navigation zu irritieren.",
+                "Starke Sonnenstürme können das GPS-Signal für Minuten komplett verschwinden lassen.",
+                "Dein Telefon nutzt beim Start nicht nur Satelliten, sondern auch Mobilfunkmasten, um den Fix zu beschleunigen.",
+                "Ein reines GPS-Gerät funktioniert in manchen Städten schlechter als ein Smartphone, weil Handys GLONASS, Galileo und GPS gleichzeitig nutzen."
             ]
         )
     ]
     
+    @State private var selectedPage = 0
+    
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Header
+        VStack(spacing: 0) {
+            // Compact Header
+            VStack(spacing: 4) {
                 Text("Wusstest du schon?")
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 50)
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
                 
-                Text("Interessante Fakten über deine Alltagsgeräte")
-                    .font(.subheadline)
+                Text("Wische nach links oder rechts")
+                    .font(.caption)
                     .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 24)
-                
-                // Facts by device
-                LazyVStack(spacing: 24) {
-                    ForEach(facts) { device in
-                        DeviceFactCard(device: device)
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 10)
-                
-                Spacer(minLength: 100)
             }
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+            
+            // Swipeable Cards
+            TabView(selection: $selectedPage) {
+                ForEach(Array(facts.enumerated()), id: \.offset) { index, device in
+                    DeviceFactCard(device: device)
+                        .tag(index)
+                        .padding(.horizontal, 24)
+                }
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+            
+            Spacer(minLength: 20)
         }
-        .background(Color(.systemBackground))
+        .background(Color(.systemBackground))   // ← FIXED: was systemGroupedBackground
         .navigationBarHidden(true)
     }
 }
@@ -108,61 +107,59 @@ struct DeviceFactCard: View {
     let device: DeviceFact
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Header
+        VStack(spacing: 0) {
+            // Top color banner
             HStack(spacing: 12) {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(device.color.opacity(0.2))
-                    .frame(width: 48, height: 48)
-                    .overlay(
-                        Image(systemName: device.icon)
-                            .font(.system(size: 22))
-                            .foregroundColor(device.color)
-                    )
+                Image(systemName: device.icon)
+                    .font(.system(size: 28))
+                    .foregroundColor(.white)
                 
                 Text(device.title)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.primary)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white)
                 
                 Spacer()
             }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(device.color)
             
             // Facts list
-            VStack(spacing: 12) {
-                ForEach(Array(device.facts.enumerated()), id: \.offset) { index, fact in
-                    HStack(alignment: .top, spacing: 12) {
-                        Text("\(index + 1)")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(.white)
-                            .frame(width: 24, height: 24)
-                            .background(device.color)
-                            .clipShape(Circle())
-                        
-                        Text(fact)
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(.primary)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                        Spacer()
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 14) {
+                    ForEach(Array(device.facts.enumerated()), id: \.offset) { index, fact in
+                        HStack(alignment: .top, spacing: 14) {
+                            Text("\(index + 1)")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(width: 28, height: 28)
+                                .background(device.color)
+                                .clipShape(Circle())
+                            
+                            Text(fact)
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+                            
+                            Spacer()
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(Color(UIColor.systemGray6))
+                        )
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(UIColor.systemGray6))
-                    )
                 }
+                .padding()
             }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(UIColor.systemBackground))
-                .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
-        )
+        .background(Color(UIColor.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(device.color.opacity(0.2), lineWidth: 2)
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(device.color.opacity(0.3), lineWidth: 2)
         )
+        .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: 6)
     }
 }
 
