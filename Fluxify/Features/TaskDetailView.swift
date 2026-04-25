@@ -3,6 +3,8 @@ import SwiftUI
 struct TaskDetailView: View {
     @ObservedObject var viewModel: TasksViewModel
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var tabBarVisibility = TabBarVisibility.shared
+
 
     private var progress: CGFloat {
         guard !viewModel.tasks.isEmpty else { return 0 }
@@ -139,8 +141,13 @@ struct TaskDetailView: View {
                     }
             }
         }
-        .toolbar(.hidden, for: .tabBar)
-
+            .toolbar(.hidden, for: .tabBar)
+            .onAppear {
+                tabBarVisibility.isVisible = false
+            }
+            .onDisappear {
+                tabBarVisibility.isVisible = true
+            }
        
         .sheet(isPresented: $viewModel.taskCompleted) {
             TaskCompletionView(

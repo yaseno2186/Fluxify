@@ -18,11 +18,9 @@ struct SettingsView1: View {
     
     var body: some View {
         NavigationStack {
-            // --- ZStack startet hier ---
+       
             ZStack {
-                // 1. Der elegante Hintergrund ganz unten
-                // (Stelle sicher, dass du ParticleBackground2 in deinem Projekt hast,
-                // sonst nimm Color.white oder einen anderen Hintergrund)
+
                 ParticleBackground2()
                     .ignoresSafeArea()
                 
