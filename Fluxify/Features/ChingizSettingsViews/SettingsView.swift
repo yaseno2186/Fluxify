@@ -21,8 +21,8 @@ struct SettingsView1: View {
        
             ZStack {
 
-                ParticleBackground2()
-                    .ignoresSafeArea()
+              //  ParticleBackground2()
+                //    .ignoresSafeArea()
                 
                 // 2. Der Content darüber
                 ScrollView {
