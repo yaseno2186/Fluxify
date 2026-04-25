@@ -193,3 +193,7 @@ struct ContactDetailRow: View {
         }
     }
 }
+
+#Preview {
+    ContactView()
+}
