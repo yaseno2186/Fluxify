@@ -32,8 +32,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1256"
             endingLineNumber = "1256"
-            landmarkName = "TaskDetailView_Previews"
-            landmarkType = "14">
+            landmarkName = "previews"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

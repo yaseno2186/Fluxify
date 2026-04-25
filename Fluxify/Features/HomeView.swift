@@ -36,46 +36,46 @@ struct HomeView: View {
                     SuchLeiste(searchText: $searchText, lessons: viewModel.lessons)
                     
                     if searchText.isEmpty {
-                        // Vier Themen-Kacheln
+                        // Vier Themen-Kacheln - nutzen jetzt die Farben aus LessonCategory
                         VStack(spacing: 16) {
                             NavigationLink(destination:
                                             ThemaDetailView(
-                                                titel: "Mechanik",
-                                                color: .mint,
+                                                titel: LessonCategory.mechanik.rawValue,
+                                                color: LessonCategory.mechanik.color,  // ← AUS BACKENDSERVICE
                                                 category: .mechanik
                                             )
                             ) {
-                                FeatureCard(title: "Mechanik", icon: "gearshape.2.fill", color: .mint)
+                                FeatureCard(title: LessonCategory.mechanik.rawValue, icon: LessonCategory.mechanik.icon, color: LessonCategory.mechanik.color)
                             }
                             
                             NavigationLink(destination:
                                             ThemaDetailView(
-                                                titel: "Elektromagnetismus",
-                                                color: .red,
+                                                titel: LessonCategory.elektromagnetismus.rawValue,
+                                                color: LessonCategory.elektromagnetismus.color,  // ← AUS BACKENDSERVICE
                                                 category: .elektromagnetismus
                                             )
                             ) {
-                                FeatureCard(title: "Elektromagnetismus", icon: "bolt.fill", color: .red)
+                                FeatureCard(title: LessonCategory.elektromagnetismus.rawValue, icon: LessonCategory.elektromagnetismus.icon, color: LessonCategory.elektromagnetismus.color)
                             }
                             
                             NavigationLink(destination:
                                             ThemaDetailView(
-                                                titel: "Wärmelehre",
-                                                color: .orange,
+                                                titel: LessonCategory.waermelehre.rawValue,
+                                                color: LessonCategory.waermelehre.color,  // ← AUS BACKENDSERVICE
                                                 category: .waermelehre
                                             )
                             ) {
-                                FeatureCard(title: "Wärmelehre", icon: "flame.fill", color: .orange)
+                                FeatureCard(title: LessonCategory.waermelehre.rawValue, icon: LessonCategory.waermelehre.icon, color: LessonCategory.waermelehre.color)
                             }
                             
                             NavigationLink(destination:
                                             ThemaDetailView(
-                                                titel: "Optik",
-                                                color: .purple,
+                                                titel: LessonCategory.optik.rawValue,
+                                                color: LessonCategory.optik.color,
                                                 category: .optik
                                             )
                             ) {
-                                FeatureCard(title: "Optik", icon: "triangle.fill", color: .purple)
+                                FeatureCard(title: LessonCategory.optik.rawValue, icon: LessonCategory.optik.icon, color: LessonCategory.optik.color)
                             }
                         }
                         .padding(.horizontal, 24)
@@ -83,7 +83,7 @@ struct HomeView: View {
                         
                         // Untere Kacheln
                         VStack(spacing: 16) {
-                            // Gespeichert - PASS THE PARAMETERS HERE
+                            // Gespeichert
                             NavigationLink(destination: GespeicherteListeView(allLessons: viewModel.lessons)) {
                                 SpecialFeatureCard(
                                     title: "Gespeichert",
@@ -93,20 +93,20 @@ struct HomeView: View {
                                 )
                             }
                             
-                            // Experten Geräte - Filter by experten category
+                            // Experten Geräte - nutzt jetzt die Farbe aus LessonCategory
                             NavigationLink(destination:
                                 ExpertenListeView(lessons: viewModel.lessons.filter { $0.category == .experten })
                             ) {
                                 SpecialFeatureCard(
-                                    title: "Experten Geräte",
-                                    icon: "graduationcap.fill",
-                                    color: .blue,
-                                    borderColor: .blue.opacity(0.8)
+                                    title: LessonCategory.experten.rawValue,
+                                    icon: LessonCategory.experten.icon,
+                                    color: LessonCategory.experten.color,
+                                    borderColor: LessonCategory.experten.color.opacity(0.8)
                                 )
                             }
                             
                             // Wusstest du schon
-                            NavigationLink(destination: WusstestDuSchonView()) {
+                            NavigationLink(destination: FunFactsView()) {
                                 SpecialFeatureCard(
                                     title: "Wusstest du schon?",
                                     icon: "lightbulb.fill",
