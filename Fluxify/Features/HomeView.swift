@@ -25,7 +25,7 @@ struct HomeView: View {
                 VStack(spacing: 15) {
                     
                     // Header
-                    Text("Home")
+                    Text("Lerneinheiten")
                         .font(.system(size: 38, weight: .bold, design: .rounded))
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .leading)

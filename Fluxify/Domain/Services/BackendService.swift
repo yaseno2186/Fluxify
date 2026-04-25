@@ -99,7 +99,7 @@ class BackendService {
                                     minValue: 0.5,
                                     maxValue: 9.0,
                                     correctValue: 2.45,
-                                    tolerance: 0.15,
+                                    tolerance: 0.5,
                                     unit: " GHz",
                                     step: 0.05
                                 ),
