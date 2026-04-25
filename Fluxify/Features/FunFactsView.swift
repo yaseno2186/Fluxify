@@ -14,7 +14,7 @@ struct FunFactsView: View {
             icon: "microwave.fill",
             color: .orange,
             facts: [
-                "Eine halbe Traube in der Mikrowelle erzeugt kurzzeitig echtes Plasma , Feuer aus Licht!",
+                "Mikrowellen erzeugen ein elektromagnetisches Feld. Metallkanten bündeln diese Energie und es entstehen Funken.",
                 "Wasser kann sich überhitzen: Es sieht ruhig aus, kocht aber nicht. Rührst du um, explodiert es dir ins Gesicht.",
                 "Ein Ei in der Schale wird zur Handgranate: Der Dampf findet kein Loch und sprengt die Schale mit lautem Knall.",
                 "Metallbeschichtete Objekte funkeln und können Brände auslösen , auch wenn es keine Gabel ist.",
