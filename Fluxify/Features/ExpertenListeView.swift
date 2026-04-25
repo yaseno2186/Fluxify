@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ExpertenListeView: View {
     let lessons: [Lesson]
-    @EnvironmentObject var savedManager: SavedLessonsManager
+    @StateObject private var savedManager = SavedLessonsManager.shared 
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -93,7 +93,7 @@ struct ExpertenListeView: View {
 
 struct ExpertLessonRow: View {
     let lesson: Lesson
-    @EnvironmentObject var savedManager: SavedLessonsManager
+    @StateObject private var savedManager = SavedLessonsManager.shared   // ← CHANGED from @EnvironmentObject
     @StateObject private var userVM = UserViewModel.shared
     
     var body: some View {
